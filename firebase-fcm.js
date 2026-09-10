@@ -47,8 +47,6 @@ const SERVICE_ACCOUNT = {
   "private_key_id": "623e9eab502b6d560d2e4b102be8cac2b369a8a3",
   "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDPs3yDckEStmJC\nx/spOeXJDT6lSlYa4snnBi1Pjul9AM0dm0oIq7H/trqvSDhVkoYzgrDqyveBM4Yf\nVcQwuGV61VTnn1umA2NZoeco2mr5zz6RwWrQgsdY+Pi7bI5ebrv6zNBJ5PZBwoWh\nu4aP40tcpvkB0n1j8etJWt4VcNBsmDbxDyhCjMr7V3H9OxZFa8s7R91Z+xHY5qit\n9mIgGjrLOLsFqnYUT1gMwNp3+1Y1izhRcZ0BPHQ+hBCPf9GV8THjhlcgr4vDyQdG\nyRKiZwh6DawlhXriD+3rFBhRF04Yr2LTecWiFPgn/9tr3FYbFNEq5jrjwyi/HgRj\nq1Lu3WHpAgMBAAECggEAE1eWjDqtAPA7ZxbuxrRxt9cMCxJIwbz2OrWWbWLkj0uu\nblgGbVeI7mR+zuE5vs1UAlLExT7EzRNGZZ9j83oOmEFq5F2QqD2HSGL1jxZFEVG5\nlNMHbpbJN/nKlxCpUvW6u4TMjl8cSDw0W98F7VsoSt7xUDhBDVhLdiO4TBSbEkuw\n+4UysBhNGLUegOXaqGRCb/HRSZw4g6MbfM8gEO81SFhbz4K1eSQ1drYkQkb3pn/v\nd7UKb1YAScP5PX6R0/CbudncqQ9PBO7OZXJwyBfoIczlfYvSzOehfNhRTBURzXe0\nGzRyA8VHLZqnyDII89mi/FnyB9UovbtfUL1OmPqpsQKBgQD4jhWgCXHacqo5K1tw\nmVDg4rSodEpsNYtNhNnwS3AusvMoZSroYN1U50cheyQ6OCC6GGFpNFMduxaFWEFf\nsm81weR/i62igChtc8g4MgkwI6OYqM/9uV6mZFu6THzORZRX/QPX7SQhmU8ZNtv3\nqHjUQ+tj3xVaPlkTJLVXUy1l2QKBgQDV7CKKgzaa8Xq/RVh+5h1C1Rnn1IoD2VNO\nykRggS+dQvC8eoFOMOBcoWT7T/+ofQ2gaG4ePCoqQ+PfWYrjTz4m1XXXL9Xu2pI0\ndlYahnwsQHRfQQcp5cllv8j3cEysgXlH4hJ8q3Q5idujHaPd/mUb2nz3Oz4LXu4Z\ngP/QwlMCkQKBgGE99WfvSgPU6JQFSnj7ApF5IITnOlarfByP5VQFr5YVnNwo+GiB\nvRYChemra7j7TJKCB1pJhlsTXvQ8Wxc9kBTQDr13wC7bRPXNXn/d04pp5w9KvFTf\nuRAQI3L3ibyJrEfgTSilNoWOnUuYEucJmnwxNl6UYJ411lOPAQNxH0nBAoGAf1gb\nU8M6bVAU1unL/Xa0soUy76u5IQNtMTj9LUmZ847WygxPDyHPXbUB7Qy5Ty5qPzQL\nYVpFa3WQn/Oo1xnkEK//f0LNomtgn3RWW2H1Z05TOCT4w7szgauCUbH7IrHMZbsx\ncB+Mh3gGVHqfgtYekE8nFvGgRJqVOH9vSXF0gtECgYApD2se55J2mdqMO3qCejLi\ni34RPV3zH23jlGq1fZXuvOCe+4TgHh+wDL8m4LmATu8A61hAqxBUO9mm9uqQAkde\nqC8pIwl4wcZFxBAHnCFnWeJeLIS7rakeS8HQZyfEqUXM5a5d5P3ACs3kV6ne4wzM\n0t0HL2Ui+iUBrj2qZ0D8UA==\n-----END PRIVATE KEY-----\n",
   "client_email": "firebase-adminsdk-fbsvc@com-tanayp-vehiclecallback.iam.gserviceaccount.com",
-  "client_id": "100197039278231739676",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token"
 };
 
@@ -70,7 +68,8 @@ function pemToArrayBuffer(pem) {
   const clean = pem
     .replace(/-----BEGIN PRIVATE KEY-----/, "")
     .replace(/-----END PRIVATE KEY-----/, "")
-    .replace(/\s+/g, "");
+    .replace(/\\n/g, "")   // strips literal backslash-n if it was never interpreted as a real newline
+    .replace(/\s+/g, "");  // strips real newlines/spaces
   const binary = atob(clean);
   const buf = new ArrayBuffer(binary.length);
   const view = new Uint8Array(buf);
