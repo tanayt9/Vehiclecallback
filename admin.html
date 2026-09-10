@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin JSON Generator</title>
+<style>
+body{margin:0;background:#f4f7fb;color:#0f172a;font-family:Inter,system-ui,sans-serif}.wrap{max-width:900px;margin:auto;padding:30px 18px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:23px;margin-top:18px;box-shadow:0 18px 45px rgba(15,23,42,.07)}h1{margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.label{display:block;font-size:13px;font-weight:800;margin:14px 0 7px}input{width:100%;box-sizing:border-box;border:1px solid #cfd7e3;border-radius:10px;padding:12px;font:inherit}button{border:0;border-radius:10px;padding:12px 15px;background:#3157d5;color:white;font-weight:800;cursor:pointer;margin-top:16px}.secondary{background:#e9eefc;color:#2445b7}.danger{background:#fff0f0;color:#b42318}.list{display:grid;gap:9px;margin-top:15px}.item{border:1px solid #e2e8f0;padding:13px;border-radius:12px;display:flex;justify-content:space-between;gap:10px}.muted{color:#64748b;font-size:13px}.msg{display:none;margin-top:12px;padding:11px;border-radius:10px}.show{display:block;background:#ecfdf3;color:#067647}@media(max-width:650px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body><main class="wrap"><a href="index.html">← Callback Center</a><div class="card"><h1>Admin JSON Generator</h1><p class="muted">This page runs entirely in the browser. It does not upload or save your registry to a server.</p>
+<div class="grid"><div><label class="label">Vehicle number</label><input id="v" placeholder="WB12AB1234"></div><div><label class="label">Owner name</label><input id="n" placeholder="Owner name"></div><div><label class="label">Mobile</label><input id="m" placeholder="9876543210"></div><div><label class="label">FCM Device Token</label><input id="t" placeholder="Firebase device token from the mobile app"></div></div>
+<button id="add">Add vehicle</button><button id="download" class="secondary" style="margin-left:7px">Download vehicles.json</button><button id="clear" class="danger" style="margin-left:7px">Clear</button>
+<div id="msg" class="msg"></div><div id="list" class="list"></div></div></main>
+<script>
+const KEY="vehicleRegistryDraftV3";let rows=JSON.parse(localStorage.getItem(KEY)||"[]");
+function render(){document.getElementById("list").innerHTML=rows.length?rows.map((x,i)=>`<div class="item"><div><b>${esc(x.vehicleNo)}</b><div class="muted">${esc(x.ownerName)} · ${esc(x.mobile)}</div></div><button class="danger" style="margin:0" onclick="removeRow(${i})">Remove</button></div>`).join(""):"<div class='muted'>No vehicles added yet.</div>";localStorage.setItem(KEY,JSON.stringify(rows))}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+window.removeRow=i=>{rows.splice(i,1);render()}
+document.getElementById("add").onclick=()=>{const v=document.getElementById("v").value.trim().toUpperCase(),n=document.getElementById("n").value.trim(),m=document.getElementById("m").value.trim(),t=document.getElementById("t").value.trim();if(!v||!n||!m){alert("Vehicle, owner and mobile are required.");return}rows.push({vehicleNo:v,ownerName:n,mobile:m,fcmToken:t||"REPLACE_WITH_REAL_FCM_TOKEN",active:true});["v","n","m","t"].forEach(id=>document.getElementById(id).value="");render()}
+document.getElementById("download").onclick=()=>{const out={version:3,updatedAt:new Date().toISOString(),vehicles:rows};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:"application/json"}));a.download="vehicles.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+document.getElementById("clear").onclick=()=>{if(confirm("Clear the local draft?")){rows=[];render()}};render()
+</script></body></html>
