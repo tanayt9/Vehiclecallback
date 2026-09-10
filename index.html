@@ -144,12 +144,6 @@ textarea{
   resize:vertical
 }
 
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px
-}
-
 .btn{
   border:0;
   border-radius:12px;
@@ -227,6 +221,13 @@ textarea{
   margin-top:7px
 }
 
+.device-count{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:6px
+}
+
 .history{
   margin-top:28px
 }
@@ -273,6 +274,11 @@ textarea{
   height:max-content
 }
 
+.badge.failed{
+  background:#fff1f0;
+  color:var(--red)
+}
+
 .empty{
   color:var(--muted);
   padding:22px;
@@ -305,16 +311,13 @@ textarea{
 }
 
 @media(max-width:800px){
+
   .hero{
     grid-template-columns:1fr
   }
 
   .hero h1{
     font-size:37px
-  }
-
-  .row{
-    grid-template-columns:1fr
   }
 
   .shell{
@@ -324,6 +327,10 @@ textarea{
   .nav{
     padding:15px 16px
   }
+
+  .history-item{
+    grid-template-columns:1fr
+  }
 }
 </style>
 </head>
@@ -332,48 +339,73 @@ textarea{
 
 <header>
   <div class="nav">
+
     <div class="brand">
       Vehicle Callback
       <small>Center</small>
     </div>
 
-    <a href="register.html">Register vehicle</a>
+    <a href="register.html">
+      Register vehicle
+    </a>
+
   </div>
 </header>
+
 
 <main class="shell">
 
   <div class="warn">
+
     <strong>⚠ Static-site security note:</strong>
-    this page sends Firebase notifications directly from the browser using an embedded
-    service account key (see <code>firebase-fcm.js</code>).
+
+    this page sends Firebase notifications directly from the browser
+    using an embedded service account key
+    (see <code>firebase-fcm.js</code>).
+
     That key is publicly visible to anyone who views this site's source.
+
     Use a dedicated, FCM-only service account and treat the key as public.
+
     See <code>web/README.md</code> for details.
+
   </div>
+
 
   <section class="hero">
 
     <div>
-      <div class="eyebrow">Fast owner contact</div>
+
+      <div class="eyebrow">
+        Fast owner contact
+      </div>
 
       <h1>
         Request a callback from a vehicle owner.
       </h1>
 
       <p class="lead">
-        Look up the vehicle by its number, then send the owner a callback
-        notification with the number they should call, via Firebase Cloud Messaging.
+        Look up the vehicle by its number, then send the owner
+        a callback notification with the number they should call,
+        via Firebase Cloud Messaging.
       </p>
+
     </div>
 
+
     <div class="card panel">
+
       <b>How it works</b>
 
-      <p class="lead" style="font-size:14px;margin-bottom:0">
+      <p
+        class="lead"
+        style="font-size:14px;margin-bottom:0"
+      >
         Vehicle number lookup → Your callback number + message →
-        Firebase (FCM) notification → Owner calls you back.
+        Firebase (FCM) notification → All registered owner devices
+        receive the notification.
       </p>
+
     </div>
 
   </section>
@@ -463,9 +495,12 @@ textarea{
 
 
     <div class="notice">
-      This is a static site. The notification request is sent directly from
-      the browser to Firebase Cloud Messaging. Browser local history is
-      stored only on this device.
+
+      This is a static site. The notification request is sent
+      directly from the browser to Firebase Cloud Messaging.
+
+      Browser local history is stored only on this device.
+
     </div>
 
   </section>
@@ -476,14 +511,19 @@ textarea{
     <div class="history-head">
 
       <div>
+
         <h2 style="margin:0">
           Notification history
         </h2>
 
-        <p style="margin:5px 0 0;color:var(--muted);font-size:13px">
+        <p
+          style="margin:5px 0 0;color:var(--muted);font-size:13px"
+        >
           Saved locally in this browser.
         </p>
+
       </div>
+
 
       <button
         class="btn danger"
@@ -504,8 +544,10 @@ textarea{
 
 
   <div class="footer">
+
     Vehicle Callback Center · Backend-free version ·
     Powered by Firebase Cloud Messaging
+
   </div>
 
 </main>
@@ -515,17 +557,32 @@ textarea{
 
 <script>
 
+/*
+ * Currently verified vehicle.
+ */
 let verifiedOwner = null;
 
 
-/* Normalize vehicle number */
+/*
+ * Normalize vehicle number.
+ *
+ * Example:
+ * "WB 74 H 4582"
+ * becomes:
+ * "WB74H4582"
+ */
 const normV = s =>
-  s.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  String(s || "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "");
 
 
-/* Normalize callback number */
+/*
+ * Normalize callback number.
+ */
 const normM = s =>
-  s.replace(/\D/g, "");
+  String(s || "")
+    .replace(/\D/g, "");
 
 
 /*
@@ -533,67 +590,146 @@ const normM = s =>
  *
  * Examples:
  *
- * TANAY PAUL  → T***Y P**L
- * RAHUL KUMAR → R***L K***R
- * AMIT        → A**T
- * A           → A
+ * Tanay Paul
+ * ->
+ * T***Y P**L
+ *
+ * Rahul Kumar
+ * ->
+ * R***L K***R
  */
 function maskName(name){
 
-  return String(name || "Registered owner")
-    .split(/\s+/)
-    .filter(Boolean)
-    .map(word => {
+  return String(
+    name || "Registered owner"
+  )
+  .trim()
+  .split(/\s+/)
+  .filter(Boolean)
+  .map(word => {
 
-      if(word.length <= 2){
-        return word;
-      }
-
-      return (
-        word[0] +
-        "*".repeat(word.length - 2) +
-        word[word.length - 1]
-      );
-
-    })
-    .join(" ");
-}
-
-
-/* Show status message */
-function status(t, ok){
-
-  const e = document.getElementById("status");
-
-  e.textContent = t;
-
-  e.className =
-    "status " +
-    (ok ? "ok" : "err");
-}
-
-
-/* Load vehicle registry */
-async function registry(){
-
-  const r = await fetch(
-    "./vehicles.json",
-    {
-      cache:"no-store"
+    if(word.length <= 2){
+      return word;
     }
-  );
 
-  if(!r.ok){
-    throw Error(
-      "Vehicle registry could not be loaded."
+    return (
+      word.charAt(0) +
+      "*".repeat(word.length - 2) +
+      word.charAt(word.length - 1)
     );
+
+  })
+  .join(" ");
+
+}
+
+
+/*
+ * Get all FCM tokens from a vehicle.
+ *
+ * Supports the recommended format:
+ *
+ * "fcmTokens": [
+ *   "TOKEN_1",
+ *   "TOKEN_2"
+ * ]
+ *
+ * Also supports the older format:
+ *
+ * "fcmToken": "TOKEN_1,TOKEN_2"
+ */
+function getFcmTokens(vehicle){
+
+  let tokens = [];
+
+
+  /*
+   * Recommended array format.
+   */
+  if(Array.isArray(vehicle.fcmTokens)){
+
+    tokens = vehicle.fcmTokens;
+
   }
 
-  return r.json();
+
+  /*
+   * Backwards-compatible string format.
+   */
+  else if(typeof vehicle.fcmToken === "string"){
+
+    tokens =
+      vehicle.fcmToken.split(",");
+
+  }
+
+
+  /*
+   * Clean and remove duplicates.
+   */
+  return [
+    ...new Set(
+      tokens
+        .map(token =>
+          String(token).trim()
+        )
+        .filter(Boolean)
+    )
+  ];
+
 }
 
 
-/* Get local notification history */
+/*
+ * Display status message.
+ */
+function status(text, ok){
+
+  const element =
+    document.getElementById("status");
+
+
+  element.textContent = text;
+
+
+  element.className =
+    "status " +
+    (ok ? "ok" : "err");
+
+}
+
+
+/*
+ * Load vehicle registry.
+ */
+async function registry(){
+
+  const response =
+    await fetch(
+      "./vehicles.json",
+      {
+        cache:"no-store"
+      }
+    );
+
+
+  if(!response.ok){
+
+    throw new Error(
+      "Vehicle registry could not be loaded."
+    );
+
+  }
+
+
+  return response.json();
+
+}
+
+
+/*
+ * Get notification history.
+ */
 function getHistory(){
 
   try{
@@ -609,45 +745,58 @@ function getHistory(){
     return [];
 
   }
+
 }
 
 
-/* Save notification history */
-function saveHistory(x){
+/*
+ * Save notification history.
+ */
+function saveHistory(item){
 
-  const a = getHistory();
+  const history =
+    getHistory();
 
-  a.unshift(x);
+
+  history.unshift(item);
+
 
   localStorage.setItem(
     "vehicleCallbackHistory",
     JSON.stringify(
-      a.slice(0,100)
+      history.slice(0,100)
     )
   );
 
+
   renderHistory();
+
 }
 
 
-/* Escape HTML */
-function escapeHtml(s){
+/*
+ * Escape HTML before displaying
+ * user-controlled values.
+ */
+function escapeHtml(value){
 
-  return String(s).replace(
+  return String(value).replace(
     /[&<>"']/g,
-    c => ({
+    character => ({
       "&":"&amp;",
       "<":"&lt;",
       ">":"&gt;",
       '"':"&quot;",
       "'":"&#39;"
-    }[c])
+    }[character])
   );
 
 }
 
 
-/* Render local history */
+/*
+ * Render notification history.
+ */
 function renderHistory(){
 
   const box =
@@ -655,10 +804,12 @@ function renderHistory(){
       "historyList"
     );
 
-  const a = getHistory();
+
+  const history =
+    getHistory();
 
 
-  if(!a.length){
+  if(!history.length){
 
     box.innerHTML =
       '<div class="empty">' +
@@ -666,35 +817,43 @@ function renderHistory(){
       '</div>';
 
     return;
+
   }
 
 
-  box.innerHTML = a.map(x =>
+  box.innerHTML =
+    history.map(item => {
 
-    `<div class="history-item">
+      const failed =
+        item.status === "Failed";
 
-      <div>
 
-        <div class="msg">
-          ${escapeHtml(x.message)}
+      return `
+        <div class="history-item">
+
+          <div>
+
+            <div class="msg">
+              ${escapeHtml(item.message)}
+            </div>
+
+            <small>
+              ${escapeHtml(item.vehicleNo)}
+              · call back on
+              ${escapeHtml(item.callbackNumber)}
+              · ${new Date(item.time).toLocaleString()}
+            </small>
+
+          </div>
+
+          <span class="badge ${failed ? "failed" : ""}">
+            ${escapeHtml(item.status)}
+          </span>
+
         </div>
+      `;
 
-        <small>
-          ${escapeHtml(x.vehicleNo)}
-          · call back on
-          ${escapeHtml(x.callbackNumber)}
-          · ${new Date(x.time).toLocaleString()}
-        </small>
-
-      </div>
-
-      <span class="badge">
-        ${escapeHtml(x.status)}
-      </span>
-
-    </div>`
-
-  ).join("");
+    }).join("");
 
 }
 
@@ -706,7 +865,7 @@ document.getElementById(
   "verifyBtn"
 ).onclick = async () => {
 
-  const v =
+  const vehicleNumber =
     normV(
       document.getElementById(
         "vehicle"
@@ -720,26 +879,45 @@ document.getElementById(
     );
 
 
+  /*
+   * Reset previous verification.
+   */
+  verifiedOwner = null;
+
+
+  if(!vehicleNumber){
+
+    box.style.display = "block";
+
+    box.innerHTML =
+      "<strong>Vehicle not verified</strong>" +
+      "<span style='color:#b42318'>" +
+      "Enter a vehicle number." +
+      "</span>";
+
+    return;
+
+  }
+
+
   try{
 
-    const d =
+    const data =
       await registry();
 
 
-    const o =
-      (d.vehicles || []).find(
-        x =>
-          x.active !== false &&
-          normV(x.vehicleNo) === v
+    const owner =
+      (data.vehicles || []).find(
+        vehicle =>
+          vehicle.active !== false &&
+          normV(vehicle.vehicleNo) === vehicleNumber
       );
 
 
     /*
-     * Vehicle not found
+     * Vehicle doesn't exist.
      */
-    if(!o){
-
-      verifiedOwner = null;
+    if(!owner){
 
       box.style.display = "block";
 
@@ -750,50 +928,78 @@ document.getElementById(
         "</span>";
 
       return;
+
     }
 
 
     /*
-     * Store the actual owner internally.
+     * Store the actual vehicle object.
      *
-     * We do NOT display the full owner name.
+     * The full owner name is NOT displayed.
      */
-    verifiedOwner = o;
+    verifiedOwner = owner;
 
 
     /*
-     * Display masked owner name.
-     *
-     * TANAY PAUL becomes:
-     * T***Y P**L
+     * Get all registered devices.
      */
-    const maskedOwnerName =
-      maskName(
-        o.ownerName
-      );
+    const tokens =
+      getFcmTokens(owner);
 
 
+    /*
+     * Mask owner name.
+     */
+    const maskedName =
+      maskName(owner.ownerName);
+
+
+    /*
+     * Display verification result.
+     */
     box.style.display = "block";
 
 
-    box.innerHTML =
-      `<strong>✓ Vehicle verified</strong>
-       <div>${escapeHtml(maskedOwnerName)}</div>
-       <span class="pill">
-         ${escapeHtml(v)}
-       </span>`;
+    box.innerHTML = `
+      <strong>✓ Vehicle verified</strong>
 
+      <div>
+        ${escapeHtml(maskedName)}
+      </div>
+
+      <span class="pill">
+        ${escapeHtml(vehicleNumber)}
+      </span>
+
+      <span class="device-count">
+        ${tokens.length}
+        registered device${tokens.length === 1 ? "" : "s"}
+      </span>
+    `;
+
+
+    if(tokens.length){
+
+      status(
+        "Vehicle verified. The notification will be sent to all registered devices.",
+        true
+      );
+
+    }else{
+
+      status(
+        "Vehicle verified, but no FCM devices are registered.",
+        false
+      );
+
+    }
+
+
+  }catch(error){
 
     status(
-      "Vehicle verified. You can send the callback request.",
-      true
-    );
-
-
-  }catch(e){
-
-    status(
-      e.message,
+      error.message ||
+      "Vehicle verification failed.",
       false
     );
 
@@ -807,13 +1013,13 @@ document.getElementById(
  */
 document.getElementById(
   "form"
-).onsubmit = async e => {
+).onsubmit = async event => {
 
-  e.preventDefault();
+  event.preventDefault();
 
 
   /*
-   * Vehicle must be verified first.
+   * Vehicle must be verified.
    */
   if(!verifiedOwner){
 
@@ -823,13 +1029,14 @@ document.getElementById(
     );
 
     return;
+
   }
 
 
   /*
-   * Validate callback number.
+   * Normalize callback number.
    */
-  const cb =
+  const callbackNumber =
     normM(
       document.getElementById(
         "callbackNumber"
@@ -837,7 +1044,7 @@ document.getElementById(
     );
 
 
-  if(!cb){
+  if(!callbackNumber){
 
     status(
       "Enter the callback number.",
@@ -845,19 +1052,20 @@ document.getElementById(
     );
 
     return;
+
   }
 
 
   /*
-   * Validate message.
+   * Get message.
    */
-  const msg =
+  const message =
     document.getElementById(
       "message"
     ).value.trim();
 
 
-  if(!msg){
+  if(!message){
 
     status(
       "Enter a message.",
@@ -865,39 +1073,45 @@ document.getElementById(
     );
 
     return;
+
   }
 
 
   /*
-   * Check FCM token.
+   * Get all FCM tokens.
    */
-  if(
-    !verifiedOwner.fcmToken ||
-    verifiedOwner.fcmToken.includes(
-      "REPLACE_WITH_REAL_FCM_TOKEN"
-    )
-  ){
+  const tokens =
+    getFcmTokens(
+      verifiedOwner
+    );
+
+
+  if(!tokens.length){
 
     status(
-      "This vehicle has no registered FCM device token.",
+      "This vehicle has no registered FCM device tokens.",
       false
     );
 
     return;
+
   }
 
 
-  const btn =
+  /*
+   * Prevent duplicate sending.
+   */
+  const sendButton =
     document.getElementById(
       "sendBtn"
     );
 
 
-  btn.disabled = true;
+  sendButton.disabled = true;
 
 
   status(
-    "Sending notification...",
+    `Sending notification to ${tokens.length} device${tokens.length === 1 ? "" : "s"}...`,
     true
   );
 
@@ -906,72 +1120,83 @@ document.getElementById(
    * Notification body.
    */
   const fullBody =
-    `${msg}\nCall back on: ${cb}`;
+    `${message}\nCall back on: ${callbackNumber}`;
 
 
-  try{
+  /*
+   * Send notification to every device.
+   *
+   * Promise.allSettled means:
+   *
+   * - Device 1 succeeds
+   * - Device 2 fails
+   * - Device 3 succeeds
+   *
+   * Device 1 and 3 are still counted as successful.
+   */
+  const results =
+    await Promise.allSettled(
 
-    await sendFcmNotification(
-      verifiedOwner.fcmToken,
-      "Vehicle Callback Request",
-      fullBody,
-      {
-        type:"CALLBACK_REQUEST",
-        vehicleNo:verifiedOwner.vehicleNo,
-        callbackNumber:cb
-      }
+      tokens.map(token =>
+
+        sendFcmNotification(
+          token,
+
+          "Vehicle Callback Request",
+
+          fullBody,
+
+          {
+            type:"CALLBACK_REQUEST",
+
+            vehicleNo:
+              verifiedOwner.vehicleNo,
+
+            callbackNumber:
+              callbackNumber
+          }
+        )
+
+      )
+
     );
 
 
-    /*
-     * Save successful request locally.
-     */
+  /*
+   * Count successful devices.
+   */
+  const successful =
+    results.filter(
+      result =>
+        result.status === "fulfilled"
+    ).length;
+
+
+  /*
+   * Count failed devices.
+   */
+  const failed =
+    results.filter(
+      result =>
+        result.status === "rejected"
+    ).length;
+
+
+  /*
+   * All devices failed.
+   */
+  if(successful === 0){
+
     saveHistory({
 
       vehicleNo:
         verifiedOwner.vehicleNo,
 
       callbackNumber:
-        cb,
+        callbackNumber,
 
       message:
-        msg,
-
-      time:
-        new Date().toISOString(),
-
-      status:
-        "Sent"
-
-    });
-
-
-    status(
-      "Notification sent. The owner should receive the callback notification.",
-      true
-    );
-
-
-    document.getElementById(
-      "message"
-    ).value = "";
-
-
-  }catch(err){
-
-    /*
-     * Save failed request locally.
-     */
-    saveHistory({
-
-      vehicleNo:
-        verifiedOwner.vehicleNo,
-
-      callbackNumber:
-        cb,
-
-      message:
-        msg,
+        message,
 
       time:
         new Date().toISOString(),
@@ -983,17 +1208,72 @@ document.getElementById(
 
 
     status(
-      err.message ||
-      "Notification failed.",
+      "Notification failed on all registered devices.",
       false
     );
 
 
-  }finally{
+    sendButton.disabled = false;
 
-    btn.disabled = false;
+    return;
 
   }
+
+
+  /*
+   * At least one device succeeded.
+   */
+  saveHistory({
+
+    vehicleNo:
+      verifiedOwner.vehicleNo,
+
+    callbackNumber:
+      callbackNumber,
+
+    message:
+      message,
+
+    time:
+      new Date().toISOString(),
+
+    status:
+      failed === 0
+        ? `Sent to ${successful} device${successful === 1 ? "" : "s"}`
+        : `Sent ${successful}, failed ${failed}`
+
+  });
+
+
+  /*
+   * Display result.
+   */
+  if(failed === 0){
+
+    status(
+      `Notification sent to all ${successful} registered devices.`,
+      true
+    );
+
+  }else{
+
+    status(
+      `Notification sent to ${successful} device${successful === 1 ? "" : "s"}. ${failed} device${failed === 1 ? "" : "s"} failed.`,
+      true
+    );
+
+  }
+
+
+  /*
+   * Clear message after successful send.
+   */
+  document.getElementById(
+    "message"
+  ).value = "";
+
+
+  sendButton.disabled = false;
 
 };
 
@@ -1015,6 +1295,7 @@ document.getElementById(
       "vehicleCallbackHistory"
     );
 
+
     renderHistory();
 
   }
@@ -1023,7 +1304,7 @@ document.getElementById(
 
 
 /*
- * Initial history render.
+ * Initial render.
  */
 renderHistory();
 
