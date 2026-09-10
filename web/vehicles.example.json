@@ -1,0 +1,11 @@
+{
+  "vehicles": [
+    {
+      "vehicleNo": "WB12AB1234",
+      "ownerName": "Demo Owner",
+      "mobile": "9876543210",
+      "expoPushToken": "ExponentPushToken[REPLACE_WITH_REAL_TOKEN]",
+      "active": true
+    }
+  ]
+}

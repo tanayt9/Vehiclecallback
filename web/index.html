@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f172a">
+<title>Vehicle Callback Center</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--blue:#3157d5;--blue2:#2445b7;--green:#067647;--red:#b42318;--amber:#92400e;--shadow:0 20px 50px rgba(15,23,42,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:#0f172a;color:white}.nav{max-width:1120px;margin:auto;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:850}.brand small{font-weight:600;opacity:.55;margin-left:6px}.nav a{color:#cbd5e1;text-decoration:none;font-size:13px}
+.shell{max-width:1120px;margin:auto;padding:40px 22px 70px}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-bottom:28px}.hero h1{font-size:46px;line-height:1.06;margin:9px 0 14px;letter-spacing:-.04em}.eyebrow{font-size:12px;color:var(--blue);font-weight:850;letter-spacing:.12em;text-transform:uppercase}.lead{color:var(--muted);font-size:17px;line-height:1.6;max-width:620px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.panel{padding:25px}.form{max-width:680px}.label{font-size:13px;font-weight:800;margin:18px 0 7px;display:block}input,textarea,select{width:100%;border:1px solid #cfd7e3;border-radius:12px;padding:13px 14px;font:inherit;background:#fff;color:var(--ink);outline:0}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(49,87,213,.10)}textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.btn{border:0;border-radius:12px;padding:14px 17px;font-weight:850;font-size:15px;cursor:pointer}.primary{background:var(--blue);color:#fff}.primary:hover{background:var(--blue2)}.secondary{background:#eef2ff;color:#2445b7}.danger{background:#fff1f0;color:var(--red)}
+.status{display:none;margin-top:16px;padding:13px 14px;border-radius:12px;font-size:14px;line-height:1.45}.ok{display:block;background:#ecfdf3;color:var(--green)}.err{display:block;background:#fff1f0;color:var(--red)}
+.verify{margin-top:18px;padding:14px;border:1px dashed #cbd5e1;border-radius:14px;display:none}.verify strong{display:block}.pill{display:inline-flex;padding:5px 9px;border-radius:99px;background:#eef2ff;color:#3157d5;font-size:11px;font-weight:850;margin-top:7px}
+.history{margin-top:28px}.history-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.history-list{display:grid;gap:10px;margin-top:14px}.history-item{border:1px solid var(--line);border-radius:14px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:12px}.history-item .msg{font-weight:750}.history-item small{display:block;color:var(--muted);margin-top:5px}.badge{font-size:11px;font-weight:850;padding:5px 8px;border-radius:99px;background:#ecfdf3;color:var(--green);height:max-content}.empty{color:var(--muted);padding:22px;text-align:center}
+.notice{margin-top:25px;color:#64748b;font-size:12px;line-height:1.55}.footer{margin-top:35px;color:#94a3b8;font-size:12px;text-align:center}
+.warn{margin:0 0 26px;padding:14px 16px;border-radius:14px;background:#fffbeb;border:1px solid #fde68a;color:var(--amber);font-size:13px;line-height:1.55}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.hero h1{font-size:37px}.row{grid-template-columns:1fr}.shell{padding-top:26px}.nav{padding:15px 16px}}
+</style></head>
+<body>
+<header><div class="nav"><div class="brand">Vehicle Callback <small>Center</small></div><a href="register.html">Register vehicle</a></div></header>
+<main class="shell">
+<div class="warn"><strong>⚠ Static-site security note:</strong> this page sends Firebase notifications directly from the browser using an embedded service account key (see <code>firebase-fcm.js</code>). That key is publicly visible to anyone who views this site's source. Use a dedicated, FCM-only service account and treat the key as public. See <code>web/README.md</code> for details.</div>
+<section class="hero"><div><div class="eyebrow">Fast owner contact</div><h1>Request a callback from a vehicle owner.</h1><p class="lead">Look up the vehicle by its number, then send the owner a callback notification with the number they should call, via Firebase Cloud Messaging.</p></div>
+<div class="card panel"><b>How it works</b><p class="lead" style="font-size:14px;margin-bottom:0">Vehicle number lookup → Your callback number + message → Firebase (FCM) notification → Owner calls you back.</p></div></section>
+
+<section class="card panel form">
+<h2 style="margin:0 0 4px">Send callback request</h2><p style="margin:0;color:var(--muted)">Verification is based on the vehicle number only.</p>
+<form id="form">
+<label class="label">Vehicle number</label><input id="vehicle" placeholder="WB12AB1234" required autocomplete="off">
+<label class="label">Your callback number</label><input id="callbackNumber" inputmode="numeric" placeholder="The number the owner should call back on" required autocomplete="tel">
+<button type="button" class="btn secondary" id="verifyBtn" style="margin-top:14px">Verify vehicle</button>
+<div class="verify" id="verify"></div>
+<label class="label">Message</label><textarea id="message" maxlength="500" required placeholder="Please call back regarding your vehicle."></textarea>
+<button class="btn primary" id="sendBtn" style="width:100%;margin-top:15px">Send notification</button>
+</form>
+<div id="status" class="status"></div>
+<div class="notice">This is a static site. The notification request is sent directly from the browser to Firebase Cloud Messaging. Browser local history is stored only on this device.</div>
+</section>
+
+<section class="history card panel">
+<div class="history-head"><div><h2 style="margin:0">Notification history</h2><p style="margin:5px 0 0;color:var(--muted);font-size:13px">Saved locally in this browser.</p></div><button class="btn danger" id="clearHistory">Clear history</button></div>
+<div id="historyList" class="history-list"></div>
+</section>
+<div class="footer">Vehicle Callback Center · Backend-free version · Powered by Firebase Cloud Messaging</div>
+</main>
+<script src="firebase-fcm.js"></script>
+<script>
+let verifiedOwner=null;
+const normV=s=>s.toUpperCase().replace(/[^A-Z0-9]/g,"");
+const normM=s=>s.replace(/\D/g,"");
+function status(t,ok){const e=document.getElementById("status");e.textContent=t;e.className="status "+(ok?"ok":"err")}
+async function registry(){const r=await fetch("./vehicles.json",{cache:"no-store"});if(!r.ok)throw Error("Vehicle registry could not be loaded.");return r.json()}
+function getHistory(){try{return JSON.parse(localStorage.getItem("vehicleCallbackHistory")||"[]")}catch{return[]}}
+function saveHistory(x){const a=getHistory();a.unshift(x);localStorage.setItem("vehicleCallbackHistory",JSON.stringify(a.slice(0,100)));renderHistory()}
+function renderHistory(){const box=document.getElementById("historyList"),a=getHistory();if(!a.length){box.innerHTML='<div class="empty">No callback requests have been sent from this browser.</div>';return}box.innerHTML=a.map(x=>`<div class="history-item"><div><div class="msg">${escapeHtml(x.message)}</div><small>${escapeHtml(x.vehicleNo)} · call back on ${escapeHtml(x.callbackNumber)} · ${new Date(x.time).toLocaleString()}</small></div><span class="badge">${escapeHtml(x.status)}</span></div>`).join("")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.getElementById("verifyBtn").onclick=async()=>{
+ const v=normV(document.getElementById("vehicle").value),box=document.getElementById("verify");
+ try{const d=await registry();const o=(d.vehicles||[]).find(x=>x.active!==false&&normV(x.vehicleNo)===v);if(!o){verifiedOwner=null;box.style.display="block";box.innerHTML="<strong>Vehicle not verified</strong><span style='color:#b42318'>No active vehicle found with that number.</span>";return}
+ verifiedOwner=o;box.style.display="block";box.innerHTML=`<strong>✓ Vehicle verified</strong><div>${escapeHtml(o.ownerName||"Registered owner")}</div><span class="pill">${escapeHtml(v)}</span>`;status("Vehicle verified. You can send the callback request.",true)
+ }catch(e){status(e.message,false)}
+};
+document.getElementById("form").onsubmit=async e=>{
+ e.preventDefault(); if(!verifiedOwner){status("Please verify the vehicle first.",false);return}
+ const cb=normM(document.getElementById("callbackNumber").value);if(!cb){status("Enter the callback number.",false);return}
+ const msg=document.getElementById("message").value.trim();if(!msg){status("Enter a message.",false);return}
+ if(!verifiedOwner.fcmToken||verifiedOwner.fcmToken.includes("REPLACE_WITH_REAL_FCM_TOKEN")){status("This vehicle has no registered FCM device token.",false);return}
+ const btn=document.getElementById("sendBtn");btn.disabled=true;status("Sending notification...",true);
+ const fullBody=`${msg}\nCall back on: ${cb}`;
+ try{
+   await sendFcmNotification(verifiedOwner.fcmToken,"Vehicle Callback Request",fullBody,{type:"CALLBACK_REQUEST",vehicleNo:verifiedOwner.vehicleNo,callbackNumber:cb});
+   saveHistory({vehicleNo:verifiedOwner.vehicleNo,callbackNumber:cb,message:msg,time:new Date().toISOString(),status:"Sent"});
+   status("Notification sent. The owner should receive the callback notification.",true);document.getElementById("message").value=""
+ }catch(err){saveHistory({vehicleNo:verifiedOwner.vehicleNo,callbackNumber:cb,message:msg,time:new Date().toISOString(),status:"Failed"});status(err.message||"Notification failed.",false)}finally{btn.disabled=false}
+};
+document.getElementById("clearHistory").onclick=()=>{if(confirm("Clear local notification history?")){localStorage.removeItem("vehicleCallbackHistory");renderHistory()}}
+renderHistory();
+</script></body></html>
