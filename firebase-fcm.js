@@ -162,7 +162,15 @@ async function sendFcmNotification(deviceToken, title, body, data) {
   );
   const out = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error((out && out.error && out.error.message) || "Firebase rejected the notification.");
-  }
+  console.error("FCM HTTP status:", res.status);
+  console.error("FCM response:", out);
+
+  throw new Error(
+    `FCM ${res.status}: ${
+      out?.error?.message ||
+      JSON.stringify(out)
+    }`
+  );
+}
   return out;
 }
