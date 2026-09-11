@@ -2,32 +2,11 @@
   "version": 3,
   "updatedAt": "2026-09-11T12:33:53.434Z",
   "vehicles": [
-    {
-      "vehicleNo": "AAAAA",
-      "ownerName": "AAA",
-      "mobile": "AAA",
-      "fcmToken": "AAA",
-      "active": true
-    },
-    {
-      "vehicleNo": "AAAAA",
-      "ownerName": "AAA",
-      "mobile": "AAA",
-      "fcmToken": "REPLACE_WITH_REAL_FCM_TOKEN",
-      "active": true
-    },
-    {
+   {
       "vehicleNo": "WB74H4582",
-      "ownerName": "tanaypaul",
+      "ownerName": "TANAY PAUL",
       "mobile": "9476273393",
-      "fcmToken": "test1",
-      "active": true
-    },
-    {
-      "vehicleNo": "WB74H4582",
-      "ownerName": "tanaypaul",
-      "mobile": "9476273393",
-      "fcmToken": "test3",
+      "fcmToken": "cvcMs7zxTuWQCsTNqVD_s1:APA91bGxuH_tzuYWHEzw6kliFLRH9meVCBtUc2lIoUCj1rNqc_hp4ZUy7LcQGDDYBaUxEjYr5s3U__cPRMtfg0POgJw_eaq12I467D_51k5XGG6zVSLcSB0",
       "active": true
     }
   ]
