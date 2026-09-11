@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1098954277016",
+    "project_id": "mycarqr-fe99c",
+    "storage_bucket": "mycarqr-fe99c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098954277016:android:8fa42dab3bf6141ab110ed",
+        "android_client_info": {
+          "package_name": "com.tanayp.maycarqr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAuTnwlowOFtkUjF2JpAElXDKG0vozStU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

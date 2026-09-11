@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Vehicle Callback",
+    "slug": "vehicle-callback-firebase",
+    "version": "3.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./icon.png",
+    "runtimeVersion": { "policy": "appVersion" },
+
+    "plugins": [
+      "@react-native-firebase/app",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+
+    "android": {
+      "package": "com.tanayp.maycarqr",
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./adaptive-icon.png",
+        "backgroundColor": "#3157D5"
+      }
+    },
+
+    "extra": {
+      "eas": {
+        "projectId": "948b160f-f4de-4794-ab4b-6a7d87ce5578"
+      }
+    }
+  }
+}
