@@ -144,3 +144,10 @@ instead:
 iOS distribution outside the App Store (TestFlight or ad-hoc) is more
 involved and requires a paid Apple Developer account — ask if you want
 those steps too.
+
+
+C:\mobile-app>npm install
+
+C:\mobile-app>npx expo prebuild --clean
+
+C:\mobile-app>eas build --profile production --platform android --clear-cache
