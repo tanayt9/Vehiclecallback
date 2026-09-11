@@ -6,7 +6,21 @@
       "vehicleNo": "WB74H4582",
       "ownerName": "TANAY PAUL",
       "mobile": "9476273393",
-      "fcmToken": "fN5vmGi0RtymWb4GvcEFid:APA91bG_H09KgszDwHBncD2T3mgQ8mhDB5MnEj1CbU4BVMzYuR0G7oZAoW4WUbPwsAQtPzgItbzmWskyr7rjEjZTMVT4KP2-FkiG2AkQWmrB3GbXVZnerwo",
+      "fcmToken": "",
+      "active": true
+    }
+  ]
+}
+{
+  "version": 4,
+  "updatedAt": "2026-09-11T17:00:00.000Z",
+  "vehicles": [
+    {
+      "vehicleNo": "WB74H4582",
+      "ownerName": "Tanay Paul",
+      "mobile": "9476273393",
+      "fcmTokens": [
+        "fN5vmGi0RtymWb4GvcEFid:APA91bG_H09KgszDwHBncD2T3mgQ8mhDB5MnEj1CbU4BVMzYuR0G7oZAoW4WUbPwsAQtPzgItbzmWskyr7rjEjZTMVT4KP2-FkiG2AkQWmrB3GbXVZnerwo"      ],
       "active": true
     }
   ]
