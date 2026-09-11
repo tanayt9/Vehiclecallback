@@ -74,7 +74,8 @@ function pemToArrayBuffer(pem) {
   const clean = pem
     .replace(/-----BEGIN PRIVATE KEY-----/, "")
     .replace(/-----END PRIVATE KEY-----/, "")
-    .replace(/\s+/g, "");
+    .replace(/\\n/g, "")   // strips literal backslash-n if it was never interpreted as a real newline
+    .replace(/\s+/g, "");  // strips real newlines/spaces
   const binary = atob(clean);
   const buf = new ArrayBuffer(binary.length);
   const view = new Uint8Array(buf);
