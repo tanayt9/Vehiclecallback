@@ -1,11 +1,26 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin JSON Generator</title>
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1">
+
+<meta name="theme-color" content="#f4f7fb">
+
+<link rel="icon" href="data:,">
+
+<title>Admin - Vehicle Registry</title>
 
 <style>
+
+*{
+  box-sizing:border-box
+}
+
 body{
   margin:0;
   background:#f4f7fb;
@@ -14,9 +29,16 @@ body{
 }
 
 .wrap{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
-  padding:30px 18px
+  padding:30px 18px 60px
+}
+
+.back{
+  color:#3157d5;
+  text-decoration:none;
+  font-weight:800;
+  font-size:14px
 }
 
 .card{
@@ -28,14 +50,24 @@ body{
   box-shadow:0 18px 45px rgba(15,23,42,.07)
 }
 
-h1{
-  margin:0
+h1,h2{
+  margin-top:0
+}
+
+h2{
+  margin-bottom:5px
+}
+
+.muted{
+  color:#64748b;
+  font-size:13px;
+  line-height:1.5
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:13px
+  gap:14px
 }
 
 .label{
@@ -47,11 +79,16 @@ h1{
 
 input{
   width:100%;
-  box-sizing:border-box;
   border:1px solid #cfd7e3;
   border-radius:10px;
   padding:12px;
-  font:inherit
+  font:inherit;
+  outline:none
+}
+
+input:focus{
+  border-color:#3157d5;
+  box-shadow:0 0 0 3px rgba(49,87,213,.1)
 }
 
 button{
@@ -65,8 +102,12 @@ button{
   margin-top:16px
 }
 
+button:hover{
+  opacity:.9
+}
+
 button:disabled{
-  opacity:.6;
+  opacity:.55;
   cursor:not-allowed
 }
 
@@ -80,390 +121,1023 @@ button:disabled{
   color:#b42318
 }
 
-.list{
-  display:grid;
-  gap:9px;
-  margin-top:15px
+.green{
+  background:#ecfdf3;
+  color:#067647
 }
 
-.item{
-  border:1px solid #e2e8f0;
-  padding:13px;
-  border-radius:12px;
+.actions{
   display:flex;
-  justify-content:space-between;
-  gap:10px
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:5px
 }
 
-.muted{
-  color:#64748b;
-  font-size:13px
+.actions button{
+  margin-top:16px
 }
 
 .msg{
   display:none;
-  margin-top:12px;
-  padding:11px;
-  border-radius:10px
+  margin-top:15px;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px
 }
 
-.show{
+.msg.ok{
   display:block;
   background:#ecfdf3;
   color:#067647
 }
 
-.error{
+.msg.err{
   display:block;
   background:#fff1f0;
   color:#b42318
 }
 
-.token-count{
+.vehicle-list{
+  display:grid;
+  gap:14px;
+  margin-top:18px
+}
+
+.vehicle-card{
+  border:1px solid #e2e8f0;
+  border-radius:15px;
+  padding:17px
+}
+
+.vehicle-header{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:flex-start
+}
+
+.vehicle-number{
+  font-size:18px;
+  font-weight:900
+}
+
+.owner{
+  color:#334155;
+  margin-top:4px
+}
+
+.tokens{
+  margin-top:14px;
+  display:grid;
+  gap:8px
+}
+
+.token{
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px
+}
+
+.token-text{
+  font-family:monospace;
+  font-size:11px;
+  word-break:break-all;
+  color:#475569
+}
+
+.token button{
+  margin:0;
+  padding:7px 9px;
+  font-size:11px;
+  flex-shrink:0
+}
+
+.badge{
   display:inline-block;
-  margin-top:5px;
-  padding:4px 8px;
+  margin-top:8px;
+  padding:5px 9px;
   border-radius:99px;
   background:#eef2ff;
   color:#3157d5;
   font-size:11px;
-  font-weight:800
+  font-weight:850
+}
+
+.empty{
+  text-align:center;
+  padding:25px;
+  color:#64748b
+}
+
+.file-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap
+}
+
+.file-row input[type=file]{
+  padding:9px;
+  background:#f8fafc
+}
+
+.warning{
+  padding:13px 15px;
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  border-radius:12px;
+  color:#92400e;
+  font-size:13px;
+  line-height:1.5;
+  margin-top:15px
 }
 
 @media(max-width:650px){
+
   .grid{
     grid-template-columns:1fr
   }
+
+  .vehicle-header{
+    flex-direction:column
+  }
+
+  .token{
+    align-items:flex-start
+  }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <main class="wrap">
 
-<a href="index.html">← Callback Center</a>
+<a
+  class="back"
+  href="./index.html">
+
+← Callback Center
+
+</a>
+
+<!-- =========================
+     HEADER
+========================= -->
 
 <div class="card">
 
-<h1>Admin JSON Generator</h1>
+<h1>
+Vehicle Registry Admin
+</h1>
 
 <p class="muted">
-Add vehicles and register multiple devices for the same vehicle.
-The data is stored locally in this browser.
+
+Use this page to manage your vehicle registry.
+The same vehicle can have multiple registered
+FCM devices.
+
+</p>
+
+<div class="warning">
+
+<strong>Admin tool:</strong>
+This page stores your working registry in this
+browser. Download the resulting
+<code>vehicles.json</code> and upload it to your
+website when you are finished.
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     LOAD EXISTING JSON
+========================= -->
+
+<div class="card">
+
+<h2>
+Load existing vehicles.json
+</h2>
+
+<p class="muted">
+
+Load your existing JSON before making changes.
+This lets you add devices or vehicles without
+losing the existing registry.
+
+</p>
+
+<div class="file-row">
+
+<input
+  type="file"
+  id="fileInput"
+  accept=".json,application/json">
+
+<button
+  id="loadFile"
+  class="secondary">
+
+Load JSON
+
+</button>
+
+</div>
+
+<div
+  id="fileMessage"
+  class="msg">
+</div>
+
+</div>
+
+
+<!-- =========================
+     ADD VEHICLE / DEVICE
+========================= -->
+
+<div class="card">
+
+<h2>
+Add vehicle / register device
+</h2>
+
+<p class="muted">
+
+If the vehicle already exists, its new FCM token
+will be added to that vehicle instead of creating
+a duplicate vehicle.
+
 </p>
 
 <div class="grid">
 
 <div>
-<label class="label">Vehicle number</label>
+
+<label class="label">
+Vehicle number
+</label>
+
 <input
   id="v"
   placeholder="WB12AB1234"
   autocomplete="off">
+
 </div>
 
 <div>
-<label class="label">Owner name</label>
+
+<label class="label">
+Owner name
+</label>
+
 <input
   id="n"
   placeholder="Owner name"
   autocomplete="name">
+
 </div>
 
 <div>
-<label class="label">Mobile</label>
+
+<label class="label">
+Mobile
+</label>
+
 <input
   id="m"
   placeholder="9876543210"
   inputmode="numeric"
   autocomplete="tel">
+
 </div>
 
 <div>
-<label class="label">FCM Device Token</label>
+
+<label class="label">
+FCM Device Token
+</label>
+
 <input
   id="t"
-  placeholder="Firebase device token"
+  placeholder="FCM registration token"
   autocomplete="off">
-</div>
 
 </div>
 
-<button id="add">Add / Register Device</button>
+</div>
+
+<div class="actions">
+
+<button id="add">
+Add / Register Device
+</button>
 
 <button
   id="download"
-  class="secondary"
-  style="margin-left:7px">
-  Download vehicles.json
+  class="secondary">
+
+Download vehicles.json
+
 </button>
 
 <button
   id="clear"
-  class="danger"
-  style="margin-left:7px">
-  Clear
+  class="danger">
+
+Clear All
+
 </button>
 
-<div id="msg" class="msg"></div>
+</div>
 
-<div id="list" class="list"></div>
+<div
+  id="msg"
+  class="msg">
+</div>
+
+</div>
+
+
+<!-- =========================
+     VEHICLE LIST
+========================= -->
+
+<div class="card">
+
+<h2>
+Registered Vehicles
+</h2>
+
+<p class="muted">
+
+Current vehicles and their registered FCM
+devices.
+
+</p>
+
+<div
+  id="list"
+  class="vehicle-list">
+</div>
 
 </div>
 
 </main>
 
+
 <script>
 
-const KEY = "vehicleRegistryDraftV4";
+/*
+====================================================
+CONFIG
+====================================================
+*/
 
-let rows = loadRows();
+const STORAGE_KEY =
+  "vehicleRegistryDraftV4";
+
 
 /*
-  Normalize old and new data.
-
-  Old format:
-    fcmToken: "TOKEN"
-
-  New format:
-    fcmTokens: ["TOKEN1", "TOKEN2"]
+====================================================
+DATA
+====================================================
 */
-function normalizeRows(input){
 
-  if(!Array.isArray(input)){
-    return [];
-  }
+let rows =
+  loadLocalRows();
 
-  return input.map(x => {
 
-    let tokens = [];
+/*
+====================================================
+NORMALIZATION
+====================================================
+*/
 
-    if(Array.isArray(x.fcmTokens)){
-      tokens = x.fcmTokens;
-    }
+function normalizeVehicle(value){
 
-    /*
-      Automatically migrate old single-token records.
-    */
-    if(x.fcmToken && !tokens.includes(x.fcmToken)){
-      tokens.push(x.fcmToken);
-    }
-
-    /*
-      Remove empty and duplicate tokens.
-    */
-    tokens = [
-      ...new Set(
-        tokens
-          .map(t => String(t || "").trim())
-          .filter(Boolean)
-      )
-    ];
-
-    return {
-      vehicleNo: String(x.vehicleNo || "").trim().toUpperCase(),
-      ownerName: String(x.ownerName || "").trim(),
-      mobile: String(x.mobile || "").trim(),
-      fcmTokens: tokens,
-      active: x.active !== false
-    };
-
-  });
-}
-
-function loadRows(){
-
-  try{
-
-    const saved = JSON.parse(
-      localStorage.getItem(KEY) || "[]"
-    );
-
-    return normalizeRows(saved);
-
-  }catch{
-
-    /*
-      Also try the previous storage key.
-    */
-    try{
-
-      const old = JSON.parse(
-        localStorage.getItem("vehicleRegistryDraftV3") || "[]"
-      );
-
-      return normalizeRows(old);
-
-    }catch{
-
-      return [];
-
-    }
-
-  }
-
-}
-
-function saveRows(){
-
-  localStorage.setItem(
-    KEY,
-    JSON.stringify(rows)
-  );
-
-}
-
-function esc(s){
-
-  return String(s).replace(
-    /[&<>"']/g,
-    c => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[c])
-  );
-
-}
-
-function showMessage(text, success = true){
-
-  const box = document.getElementById("msg");
-
-  box.textContent = text;
-
-  box.className =
-    "msg " + (success ? "show" : "error");
-
-}
-
-function normalizeVehicle(s){
-
-  return String(s || "")
+  return String(value || "")
     .toUpperCase()
     .replace(/[^A-Z0-9]/g,"");
 
 }
 
-function normalizeMobile(s){
 
-  return String(s || "")
+function normalizeMobile(value){
+
+  return String(value || "")
     .replace(/\D/g,"");
 
 }
 
-/*
-  Render vehicle list.
-*/
-function render(){
-
-  const list = document.getElementById("list");
-
-  if(!rows.length){
-
-    list.innerHTML =
-      "<div class='muted'>No vehicles added yet.</div>";
-
-    saveRows();
-
-    return;
-
-  }
-
-  list.innerHTML = rows.map((x,i) => {
-
-    const tokenCount = x.fcmTokens.length;
-
-    return `
-      <div class="item">
-
-        <div>
-
-          <b>${esc(x.vehicleNo)}</b>
-
-          <div class="muted">
-            ${esc(x.ownerName)}
-            ·
-            ${esc(x.mobile)}
-          </div>
-
-          <span class="token-count">
-            ${tokenCount}
-            device${tokenCount === 1 ? "" : "s"}
-            registered
-          </span>
-
-        </div>
-
-        <button
-          class="danger"
-          style="margin:0"
-          onclick="removeRow(${i})">
-          Remove
-        </button>
-
-      </div>
-    `;
-
-  }).join("");
-
-  saveRows();
-
-}
 
 /*
-  Remove vehicle completely.
+====================================================
+TOKEN NORMALIZATION
+====================================================
 */
-window.removeRow = function(i){
 
-  if(!rows[i]){
-    return;
-  }
+function normalizeTokens(vehicle){
 
-  const vehicle = rows[i].vehicleNo;
+  let tokens = [];
+
+  /*
+    New format:
+      fcmTokens: []
+  */
 
   if(
-    confirm(
-      `Remove vehicle ${vehicle} and all registered devices?`
-    )
+    Array.isArray(vehicle.fcmTokens)
   ){
 
-    rows.splice(i,1);
-
-    render();
-
-    showMessage(
-      `${vehicle} removed.`,
-      true
+    tokens.push(
+      ...vehicle.fcmTokens
     );
 
   }
 
-};
+  /*
+    Old format:
+      fcmToken: "TOKEN"
+  */
+
+  if(vehicle.fcmToken){
+
+    tokens.push(
+      vehicle.fcmToken
+    );
+
+  }
+
+  /*
+    Remove blank and duplicate tokens.
+  */
+
+  return [
+    ...new Set(
+      tokens
+        .map(token =>
+          String(token || "").trim()
+        )
+        .filter(Boolean)
+    )
+  ];
+
+}
+
 
 /*
-  Add vehicle OR register another device.
+====================================================
+NORMALIZE VEHICLE RECORD
+====================================================
 */
-document.getElementById("add").onclick = function(){
 
-  const vehicle = normalizeVehicle(
-    document.getElementById("v").value
+function normalizeVehicleRecord(vehicle){
+
+  return {
+
+    vehicleNo:
+      normalizeVehicle(
+        vehicle.vehicleNo
+      ),
+
+    ownerName:
+      String(
+        vehicle.ownerName || ""
+      ).trim(),
+
+    mobile:
+      String(
+        vehicle.mobile || ""
+      ).trim(),
+
+    fcmTokens:
+      normalizeTokens(vehicle),
+
+    active:
+      vehicle.active !== false
+
+  };
+
+}
+
+
+/*
+====================================================
+NORMALIZE COMPLETE REGISTRY
+====================================================
+*/
+
+function normalizeRows(data){
+
+  if(!Array.isArray(data)){
+
+    return [];
+
+  }
+
+  const result = [];
+
+  data.forEach(vehicle => {
+
+    const normalized =
+      normalizeVehicleRecord(
+        vehicle
+      );
+
+    if(!normalized.vehicleNo){
+
+      return;
+
+    }
+
+    /*
+      If duplicate vehicle records already
+      exist, merge them together.
+    */
+
+    const existing =
+      result.find(
+        x =>
+          x.vehicleNo ===
+          normalized.vehicleNo
+      );
+
+    if(existing){
+
+      /*
+        Update information if supplied.
+      */
+
+      if(normalized.ownerName){
+        existing.ownerName =
+          normalized.ownerName;
+      }
+
+      if(normalized.mobile){
+        existing.mobile =
+          normalized.mobile;
+      }
+
+      /*
+        Merge tokens.
+      */
+
+      existing.fcmTokens = [
+        ...new Set([
+          ...existing.fcmTokens,
+          ...normalized.fcmTokens
+        ])
+      ];
+
+      existing.active =
+        normalized.active;
+
+    }else{
+
+      result.push(
+        normalized
+      );
+
+    }
+
+  });
+
+  return result;
+
+}
+
+
+/*
+====================================================
+LOAD LOCAL DATA
+====================================================
+*/
+
+function loadLocalRows(){
+
+  /*
+    Try V4 first.
+  */
+
+  try{
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(
+          STORAGE_KEY
+        ) || "[]"
+      );
+
+    if(
+      Array.isArray(saved) &&
+      saved.length
+    ){
+
+      return normalizeRows(
+        saved
+      );
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      "V4 local registry could not be loaded.",
+      error
+    );
+
+  }
+
+
+  /*
+    Migrate old V3 data.
+  */
+
+  try{
+
+    const old =
+      JSON.parse(
+        localStorage.getItem(
+          "vehicleRegistryDraftV3"
+        ) || "[]"
+      );
+
+    return normalizeRows(
+      old
+    );
+
+  }catch(error){
+
+    console.warn(
+      "V3 local registry could not be loaded.",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/*
+====================================================
+SAVE LOCAL DATA
+====================================================
+*/
+
+function saveLocalRows(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(rows)
   );
 
-  const owner = document.getElementById("n").value.trim();
+}
 
-  const mobile = normalizeMobile(
-    document.getElementById("m").value
+
+/*
+====================================================
+HTML ESCAPE
+====================================================
+*/
+
+function esc(value){
+
+  return String(value).replace(
+    /[&<>"']/g,
+    char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[char])
   );
 
-  const token = document.getElementById("t").value.trim();
+}
+
+
+/*
+====================================================
+MESSAGES
+====================================================
+*/
+
+function showMessage(
+  elementId,
+  text,
+  success = true
+){
+
+  const element =
+    document.getElementById(
+      elementId
+    );
+
+  element.textContent =
+    text;
+
+  element.className =
+    "msg " +
+    (success
+      ? "ok"
+      : "err");
+
+}
+
+
+/*
+====================================================
+REMOVE TOKEN
+====================================================
+*/
+
+window.removeToken =
+function(vehicleIndex, tokenIndex){
+
+  const vehicle =
+    rows[vehicleIndex];
+
+  if(!vehicle){
+
+    return;
+
+  }
+
+  const token =
+    vehicle.fcmTokens[tokenIndex];
+
+  if(!token){
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      "Remove this device token?"
+    )
+  ){
+
+    return;
+
+  }
+
+  vehicle.fcmTokens.splice(
+    tokenIndex,
+    1
+  );
+
+  saveLocalRows();
+
+  render();
+
+};
+
+
+/*
+====================================================
+REMOVE VEHICLE
+====================================================
+*/
+
+window.removeVehicle =
+function(index){
+
+  const vehicle =
+    rows[index];
+
+  if(!vehicle){
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      `Remove vehicle ${vehicle.vehicleNo} and all its devices?`
+    )
+  ){
+
+    return;
+
+  }
+
+  rows.splice(
+    index,
+    1
+  );
+
+  saveLocalRows();
+
+  render();
+
+  showMessage(
+    "msg",
+    `${vehicle.vehicleNo} removed.`,
+    true
+  );
+
+};
+
+
+/*
+====================================================
+RENDER VEHICLES
+====================================================
+*/
+
+function render(){
+
+  const list =
+    document.getElementById(
+      "list"
+    );
+
+  if(!rows.length){
+
+    list.innerHTML = `
+      <div class="empty">
+        No vehicles registered yet.
+      </div>
+    `;
+
+    saveLocalRows();
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    rows.map(
+      (vehicle, vehicleIndex) => {
+
+        const tokens =
+          Array.isArray(
+            vehicle.fcmTokens
+          )
+            ? vehicle.fcmTokens
+            : [];
+
+
+        return `
+
+          <div class="vehicle-card">
+
+            <div class="vehicle-header">
+
+              <div>
+
+                <div class="vehicle-number">
+
+                  ${esc(
+                    vehicle.vehicleNo
+                  )}
+
+                </div>
+
+                <div class="owner">
+
+                  ${esc(
+                    vehicle.ownerName
+                  )}
+
+                  ·
+
+                  ${esc(
+                    vehicle.mobile
+                  )}
+
+                </div>
+
+                <span class="badge">
+
+                  ${tokens.length}
+                  device${tokens.length === 1 ? "" : "s"}
+
+                </span>
+
+              </div>
+
+
+              <button
+                class="danger"
+                style="margin:0"
+                onclick="removeVehicle(${vehicleIndex})">
+
+                Remove Vehicle
+
+              </button>
+
+            </div>
+
+
+            <div class="tokens">
+
+              ${
+                tokens.length
+                  ? tokens.map(
+                      (token, tokenIndex) => `
+
+                        <div class="token">
+
+                          <div
+                            class="token-text">
+
+                            ${esc(token)}
+
+                          </div>
+
+                          <button
+                            class="danger"
+                            onclick="removeToken(
+                              ${vehicleIndex},
+                              ${tokenIndex}
+                            )">
+
+                            Remove
+
+                          </button>
+
+                        </div>
+
+                      `
+                    ).join("")
+                  : `
+
+                    <div class="muted">
+
+                      No FCM devices registered.
+
+                    </div>
+
+                  `
+              }
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+
+  saveLocalRows();
+
+}
+
+
+/*
+====================================================
+ADD / REGISTER DEVICE
+====================================================
+*/
+
+document.getElementById(
+  "add"
+).onclick = function(){
+
+  const vehicle =
+    normalizeVehicle(
+      document.getElementById("v").value
+    );
+
+  const owner =
+    document.getElementById("n").value.trim();
+
+  const mobile =
+    normalizeMobile(
+      document.getElementById("m").value
+    );
+
+  const token =
+    document.getElementById("t").value.trim();
+
+
+  /*
+    Validate.
+  */
 
   if(!vehicle){
 
     showMessage(
+      "msg",
       "Vehicle number is required.",
       false
     );
@@ -472,9 +1146,11 @@ document.getElementById("add").onclick = function(){
 
   }
 
+
   if(!owner){
 
     showMessage(
+      "msg",
       "Owner name is required.",
       false
     );
@@ -483,9 +1159,11 @@ document.getElementById("add").onclick = function(){
 
   }
 
+
   if(!mobile){
 
     showMessage(
+      "msg",
       "Mobile number is required.",
       false
     );
@@ -494,45 +1172,75 @@ document.getElementById("add").onclick = function(){
 
   }
 
+
   /*
     Find existing vehicle.
   */
-  const existingIndex = rows.findIndex(
-    x => normalizeVehicle(x.vehicleNo) === vehicle
-  );
+
+  let existing =
+    rows.find(
+      x =>
+        normalizeVehicle(
+          x.vehicleNo
+        ) === vehicle
+    );
+
 
   /*
-    Vehicle already exists.
+    EXISTING VEHICLE
   */
-  if(existingIndex !== -1){
 
-    const existing = rows[existingIndex];
+  if(existing){
+
+    existing.ownerName =
+      owner;
+
+    existing.mobile =
+      mobile;
+
+    existing.active =
+      true;
+
+
+    if(
+      !Array.isArray(
+        existing.fcmTokens
+      )
+    ){
+
+      existing.fcmTokens = [];
+
+    }
+
 
     /*
-      Update owner/mobile information.
+      If a token was supplied,
+      add it to the array.
     */
-    existing.ownerName = owner;
-    existing.mobile = mobile;
-    existing.active = true;
 
-    /*
-      Add new device token only if supplied.
-    */
     if(token){
 
-      if(!existing.fcmTokens.includes(token)){
-
-        existing.fcmTokens.push(token);
+      if(
+        existing.fcmTokens.includes(
+          token
+        )
+      ){
 
         showMessage(
-          `Device added to ${vehicle}. Total devices: ${existing.fcmTokens.length}`,
+          "msg",
+          "This device token is already registered for this vehicle.",
           true
         );
 
       }else{
 
+        existing.fcmTokens.push(
+          token
+        );
+
         showMessage(
-          "This device token is already registered for this vehicle.",
+          "msg",
+          `${vehicle}: new device added. Total devices: ${existing.fcmTokens.length}.`,
           true
         );
 
@@ -541,164 +1249,380 @@ document.getElementById("add").onclick = function(){
     }else{
 
       showMessage(
+        "msg",
         `${vehicle} already exists. No new device token was added.`,
         true
       );
 
     }
 
-  }else{
+  }
 
-    /*
-      Create new vehicle.
-    */
-    rows.push({
 
-      vehicleNo: vehicle,
+  /*
+    NEW VEHICLE
+  */
 
-      ownerName: owner,
+  else{
 
-      mobile: mobile,
+    existing = {
 
-      fcmTokens: token
-        ? [token]
-        : [],
+      vehicleNo:
+        vehicle,
 
-      active: true
+      ownerName:
+        owner,
 
-    });
+      mobile:
+        mobile,
+
+      fcmTokens:
+        token
+          ? [token]
+          : [],
+
+      active:
+        true
+
+    };
+
+    rows.push(
+      existing
+    );
 
     showMessage(
-      `Vehicle ${vehicle} added successfully.`,
+      "msg",
+      `${vehicle} added successfully.`,
       true
     );
 
   }
 
+
   /*
-    Clear fields.
+    Clear form.
   */
-  ["v","n","m","t"].forEach(
-    id => document.getElementById(id).value = ""
+
+  [
+    "v",
+    "n",
+    "m",
+    "t"
+  ].forEach(
+    id =>
+      document.getElementById(id).value = ""
   );
+
 
   render();
 
 };
 
+
 /*
-  Download vehicles.json.
-
-  IMPORTANT:
-  Only fcmTokens is exported.
-  The old fcmToken property is never exported.
+====================================================
+DOWNLOAD JSON
+====================================================
 */
-document.getElementById("download").onclick = function(){
 
-  const out = {
+document.getElementById(
+  "download"
+).onclick = function(){
 
-    version: 4,
+  /*
+    Build clean JSON.
+
+    Old "fcmToken" is NOT exported.
+  */
+
+  const output = {
+
+    version:
+      4,
 
     updatedAt:
       new Date().toISOString(),
 
-    vehicles: rows.map(x => ({
+    vehicles:
+      rows.map(vehicle => {
 
-      vehicleNo: x.vehicleNo,
-
-      ownerName: x.ownerName,
-
-      mobile: x.mobile,
-
-      fcmTokens: [
-        ...new Set(
-          (Array.isArray(x.fcmTokens)
-            ? x.fcmTokens
-            : []
+        const tokens =
+          Array.isArray(
+            vehicle.fcmTokens
           )
-          .map(t => String(t || "").trim())
-          .filter(Boolean)
-        )
-      ],
+            ? vehicle.fcmTokens
+            : [];
 
-      active: x.active !== false
 
-    }))
+        return {
+
+          vehicleNo:
+            vehicle.vehicleNo,
+
+          ownerName:
+            vehicle.ownerName,
+
+          mobile:
+            vehicle.mobile,
+
+          fcmTokens:
+            [
+              ...new Set(
+                tokens
+                  .map(token =>
+                    String(
+                      token || ""
+                    ).trim()
+                  )
+                  .filter(Boolean)
+              )
+            ],
+
+          active:
+            vehicle.active !== false
+
+        };
+
+      })
 
   };
 
-  const json = JSON.stringify(
-    out,
-    null,
-    2
-  );
 
-  const blob = new Blob(
-    [json],
-    {
-      type:"application/json"
-    }
-  );
+  const json =
+    JSON.stringify(
+      output,
+      null,
+      2
+    );
+
+
+  const blob =
+    new Blob(
+      [json],
+      {
+        type:
+          "application/json"
+      }
+    );
+
 
   const url =
-    URL.createObjectURL(blob);
+    URL.createObjectURL(
+      blob
+    );
 
-  const a =
+
+  const link =
     document.createElement("a");
 
-  a.href = url;
+  link.href =
+    url;
 
-  a.download =
+  link.download =
     "vehicles.json";
 
-  document.body.appendChild(a);
 
-  a.click();
+  document.body.appendChild(
+    link
+  );
 
-  a.remove();
+  link.click();
+
+  link.remove();
+
 
   setTimeout(
-    () => URL.revokeObjectURL(url),
+    () =>
+      URL.revokeObjectURL(url),
     1000
   );
 
+
   showMessage(
-    `vehicles.json downloaded with ${rows.length} vehicle${rows.length === 1 ? "" : "s"}.`,
+    "msg",
+    `vehicles.json downloaded. ${rows.length} vehicle${rows.length === 1 ? "" : "s"} included.`,
     true
   );
 
 };
 
+
 /*
-  Clear all local data.
+====================================================
+LOAD JSON FILE
+====================================================
 */
-document.getElementById("clear").onclick = function(){
 
-  if(
-    confirm(
-      "Clear all locally stored vehicles and device tokens?"
-    )
-  ){
+document.getElementById(
+  "loadFile"
+).onclick = function(){
 
-    rows = [];
+  const input =
+    document.getElementById(
+      "fileInput"
+    );
 
-    render();
+  const file =
+    input.files[0];
+
+
+  if(!file){
 
     showMessage(
-      "Local registry cleared.",
-      true
+      "fileMessage",
+      "Select a vehicles.json file first.",
+      false
     );
+
+    return;
 
   }
 
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    function(){
+
+      try{
+
+        const data =
+          JSON.parse(
+            reader.result
+          );
+
+
+        /*
+          Validate basic structure.
+        */
+
+        if(
+          !data ||
+          !Array.isArray(
+            data.vehicles
+          )
+        ){
+
+          throw new Error(
+            "Invalid vehicles.json format."
+          );
+
+        }
+
+
+        /*
+          Replace current registry
+          with loaded registry.
+        */
+
+        rows =
+          normalizeRows(
+            data.vehicles
+          );
+
+
+        saveLocalRows();
+
+        render();
+
+
+        showMessage(
+          "fileMessage",
+          `Loaded ${rows.length} vehicle${rows.length === 1 ? "" : "s"} successfully.`,
+          true
+        );
+
+
+      }catch(error){
+
+        showMessage(
+          "fileMessage",
+          error.message ||
+          "Could not read the JSON file.",
+          false
+        );
+
+      }
+
+    };
+
+
+  reader.onerror =
+    function(){
+
+      showMessage(
+        "fileMessage",
+        "Could not read the selected file.",
+        false
+      );
+
+    };
+
+
+  reader.readAsText(
+    file
+  );
+
 };
 
+
 /*
-  Initial render.
+====================================================
+CLEAR ALL
+====================================================
 */
+
+document.getElementById(
+  "clear"
+).onclick = function(){
+
+  if(
+    !confirm(
+      "Clear the entire local vehicle registry?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  rows = [];
+
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+  localStorage.removeItem(
+    "vehicleRegistryDraftV3"
+  );
+
+
+  render();
+
+
+  showMessage(
+    "msg",
+    "Local registry cleared.",
+    true
+  );
+
+};
+
+
+/*
+====================================================
+INITIALIZE
+====================================================
+*/
+
 render();
 
 </script>
 
 </body>
+
 </html>
