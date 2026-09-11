@@ -1,20 +1,336 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vehicle Registration Request</title>
-<style>
-body{margin:0;background:#f4f7fb;color:#0f172a;font-family:Inter,system-ui,sans-serif}.wrap{max-width:720px;margin:auto;padding:35px 18px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:26px;box-shadow:0 20px 50px rgba(15,23,42,.08)}a{color:#3157d5;text-decoration:none;font-size:13px}.eyebrow{margin-top:20px;color:#3157d5;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}h1{font-size:38px;letter-spacing:-.03em;margin:9px 0 10px}p{color:#64748b;line-height:1.55}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.label{display:block;font-size:13px;font-weight:800;margin:17px 0 7px}input,textarea{width:100%;box-sizing:border-box;border:1px solid #cfd7e3;border-radius:12px;padding:13px;font:inherit}textarea{min-height:110px}.btn{width:100%;margin-top:20px;border:0;border-radius:12px;padding:14px;background:#3157d5;color:#fff;font-weight:800;font-size:15px;cursor:pointer}.status{display:none;margin-top:16px;padding:13px;border-radius:12px}.ok{display:block;background:#ecfdf3;color:#067647}.err{display:block;background:#fff1f0;color:#b42318}@media(max-width:650px){.row{grid-template-columns:1fr}h1{font-size:32px}}
-</style></head>
-<body><main class="wrap"><a href="index.html">← Back to Callback Center</a><div class="eyebrow">New vehicle</div><h1>Register your vehicle</h1><p>Submit the owner and vehicle details. This request is sent to the application owner's email address for approval/processing.</p>
-<section class="card"><form id="reg">
-<div class="row"><div><label class="label">Vehicle number</label><input id="v" required placeholder="WB12AB1234"></div><div><label class="label">Owner name</label><input id="name" required placeholder="Owner name"></div></div>
-<div class="row"><div><label class="label">Mobile number</label><input id="m" inputmode="numeric" required placeholder="9876543210"></div><div><label class="label">Email</label><input id="email" type="email" placeholder="owner@example.com"></div></div>
-<label class="label">Message / registration note</label><textarea id="note" placeholder="Any additional information"></textarea>
-<button class="btn">Submit registration request</button></form><div id="s" class="status"></div>
-<p style="font-size:12px;margin-bottom:0">Backend-free limitation: a static GitHub Pages page cannot securely send an arbitrary email by itself. This version uses a configurable mailto workflow, which opens the user's email client. For automatic email delivery without the user's mail client, use a form/email service or serverless function.</p>
-</section></main>
-<script>
-const OWNER_EMAIL="YOUR_OWNER_EMAIL@example.com";
-document.getElementById("reg").onsubmit=e=>{e.preventDefault();const v=document.getElementById("v").value.trim(),n=document.getElementById("name").value.trim(),m=document.getElementById("m").value.trim(),em=document.getElementById("email").value.trim(),note=document.getElementById("note").value.trim();const subject=`New Vehicle Registration - ${v}`;const body=`New vehicle registration request\\n\\nVehicle No: ${v}\\nOwner Name: ${n}\\nMobile: ${m}\\nEmail: ${em}\\nNote: ${note}`;if(OWNER_EMAIL.includes("YOUR_OWNER_EMAIL")){const s=document.getElementById("s");s.textContent="Set OWNER_EMAIL in register.html first.";s.className="status err";return}location.href=`mailto:${encodeURIComponent(OWNER_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;const s=document.getElementById("s");s.textContent="Your email application should open with the registration request prepared.";s.className="status ok"};
-</script></body></html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Vehicle Registration Request</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      color: #0f172a;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: auto;
+      padding: 35px 18px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, .08);
+    }
+
+    a {
+      color: #3157d5;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .eyebrow {
+      margin-top: 20px;
+      color: #3157d5;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 38px;
+      letter-spacing: -.03em;
+      margin: 9px 0 10px;
+    }
+
+    p {
+      color: #64748b;
+      line-height: 1.55;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      margin: 17px 0 7px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #cfd7e3;
+      border-radius: 12px;
+      padding: 13px;
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #3157d5;
+      box-shadow: 0 0 0 3px rgba(49, 87, 213, .1);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 20px;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px;
+      background: #3157d5;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+
+    .btn:hover {
+      background: #2647b5;
+    }
+
+    .btn:active {
+      transform: scale(.99);
+    }
+
+    .status {
+      display: none;
+      margin-top: 16px;
+      padding: 13px;
+      border-radius: 12px;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .ok {
+      display: block;
+      background: #ecfdf3;
+      color: #067647;
+    }
+
+    .err {
+      display: block;
+      background: #fff1f0;
+      color: #b42318;
+    }
+
+    .info {
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 650px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="wrap">
+
+    <a href="index.html">← Back to Callback Center</a>
+
+    <div class="eyebrow">New vehicle</div>
+
+    <h1>Register your vehicle</h1>
+
+    <p>
+      Submit the owner and vehicle details.
+      When you submit the form, Gmail will open with the registration
+      request prepared and addressed to the application owner.
+    </p>
+
+    <section class="card">
+
+      <form id="reg">
+
+        <div class="row">
+
+          <div>
+            <label class="label" for="v">Vehicle number</label>
+            <input
+              id="v"
+              required
+              placeholder="WB12AB1234"
+              autocomplete="off"
+            >
+          </div>
+
+          <div>
+            <label class="label" for="name">Owner name</label>
+            <input
+              id="name"
+              required
+              placeholder="Owner name"
+              autocomplete="name"
+            >
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div>
+            <label class="label" for="m">Mobile number</label>
+            <input
+              id="m"
+              type="tel"
+              inputmode="numeric"
+              required
+              placeholder="9876543210"
+              autocomplete="tel"
+              pattern="[0-9]{10}"
+              title="Please enter a 10-digit mobile number"
+            >
+          </div>
+
+          <div>
+            <label class="label" for="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="owner@example.com"
+              autocomplete="email"
+            >
+          </div>
+
+        </div>
+
+        <label class="label" for="note">
+          Message / registration note
+        </label>
+
+        <textarea
+          id="note"
+          placeholder="Any additional information"
+        ></textarea>
+
+        <button class="btn" type="submit">
+          Open Gmail & Send Registration Request
+        </button>
+
+      </form>
+
+      <div id="s" class="status"></div>
+
+      <div class="info">
+        Gmail will open with the recipient, subject, and registration
+        details already filled in. You only need to review the message
+        and click <strong>Send</strong>.
+      </div>
+
+      <p style="font-size:12px;margin-bottom:0">
+        Note: A static GitHub Pages website cannot securely send an email
+        automatically. This version opens Gmail's compose window instead.
+        The user must click Send in Gmail.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    // Email address that will receive vehicle registrations
+    const OWNER_EMAIL = "foodie.cob@gmail.com";
+
+
+    document.getElementById("reg").addEventListener("submit", function(e) {
+
+      e.preventDefault();
+
+
+      // Get form values
+      const vehicleNumber =
+        document.getElementById("v").value.trim();
+
+      const ownerName =
+        document.getElementById("name").value.trim();
+
+      const mobile =
+        document.getElementById("m").value.trim();
+
+      const ownerEmail =
+        document.getElementById("email").value.trim();
+
+      const note =
+        document.getElementById("note").value.trim();
+
+
+      // Create email subject
+      const subject =
+        `New Vehicle Registration - ${vehicleNumber}`;
+
+
+      // Create email body
+      const body =
+`New Vehicle Registration Request
+
+Vehicle No: ${vehicleNumber}
+Owner Name: ${ownerName}
+Mobile: ${mobile}
+Email: ${ownerEmail || "Not provided"}
+
+Registration Note:
+${note || "No additional information provided."}
+
+--------------------------------
+Submitted from Vehicle Registration Form`;
+
+
+      // Gmail compose URL
+      const gmailUrl =
+        "https://mail.google.com/mail/?view=cm&fs=1" +
+        "&to=" + encodeURIComponent(OWNER_EMAIL) +
+        "&su=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+
+
+      // Open Gmail in a new tab
+      window.open(gmailUrl, "_blank");
+
+
+      // Show confirmation on the website
+      const status = document.getElementById("s");
+
+      status.textContent =
+        "Gmail has been opened with your registration request. Review the email and click Send.";
+
+      status.className = "status ok";
+
+    });
+
+  </script>
+
+</body>
+</html>
