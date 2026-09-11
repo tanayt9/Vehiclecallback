@@ -44,12 +44,11 @@
 const SERVICE_ACCOUNT = {
   "type": "service_account",
   "project_id": "vechilecallback",
-  "private_key_id": "d337145b335b9b1cf5f1d88f13c78ec169536a53",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC4betLsnrj2F6T\nIljMEt/U1i1QhW3JziBOdm/kbDvTxkejk2hSur/9vSqLN6a+4UesoaYICT2jMCta\n6BK8F6CA7WX5r64az0W6qCQ9IKO/c/BG673sxnuI1SZnTA1WSMtpgHz+rxI7Hqbl\nGYZIwevSQUH6pDQjS83b/aUtbulLCU8bCFtFNBnpdtKnlDqyQjr18aG86OnB39Zu\n/Lr4ZxfFaxx+vQ7/btZjeeUbvvOekSud6KLzCntK9bMQNU4gIyCreINRMlS/O9WC\nb0nPtl43q0Rh3xkPWkNRWB4MZ+uxhhntmC6C0ZY5ey6S2EjMWskd7tnn1tB1R3mp\nUo4DzLWzAgMBAAECggEAULUtdFVZKO8tR/cOY9PYptPJRcT2LAtroNp8kbn5nm3V\nONSPoTB/RyNqhDzo1/xO+NFOjpK4qfqw5lnLpQsz3mfFKfSC3NGawpnFLgjkD6rF\nWcvdM8oSEmmwoiCqb3lwpq0nRe7ILB34TCaU2K8gK0UKggwsksuf/SbtC0pPhlmA\n0+wqupNYEqlhAD/U0ebsGceYxGQ0UhIjGKBOz/AaytFjhqg4LXwzVAPY62s1TgM7\nTMQcrUaDvL4L4hIjfMBqFvk7ok50UzHmZvQ3GXUSKVexfiGT6kAWUDmoeo6F0RLl\nxA9J/zoLcvkNBtFrlHndTIOSgVm1WMy4uvagg9oieQKBgQDdBLj9s2H9+lXz2/gZ\n1GT27ddPxGC4FKYLRJYvR5gJuHzz+03QmhrYnWv210PD7n80qfdMt8+igRICfhS3\ngOrI7heB8zr+RJzClT/cBatzWAwNYpBe5xbA2RP8xN9N47K+Eu7F7LXIoVM5aDKq\nePcrivc1OpN1zN1pIJqXxvosqQKBgQDVnqv14VpUwirZLx79qNTVu5lHE5MFCd8d\nbW7Y/VtC/iIp9YTB53uN1jNOMynEoQUszzLbHgRdjPuw9meJvOe47fvewDGzacVm\n/r8gnaxbOEvk9A9Rue92zzCo+WJq795Nxfz0AU7QojK2u7LiPe93AmYwqKMs7uLn\nOw/GHvMM+wKBgGvAlKvjW5/l/yefk2qMWRjlxbX26Kx2LKmLq6irP91lW03btAlC\nSFpZDTzPoBMS4GN9hbqaVplEUdJzQ4hfSpfhNAa/3X//VWmsN/D9tqPKRj30Uqxh\n/37PlmYCWVfw7cCrHEvUZp/Evv1a5nCj/uT0oCcMQr4Ivd017wiWEnvZAoGAR7aB\nwgSKH6QjYE+6VquD79CPr1W56FodBbMEIGJFbeMEsxNSIwpD5yS+ioUQg4sOwrE4\nQGj+TC2VHR5LOekp3WI/SNM6nCFo/J+OqDNmdiUbDVyFfAkwg7Egg8lcqcum1HMf\n7QY3YEDjR4cRkXP7XPd4OOOUC/SSRdAFBpzDOVsCgYBYjb+WtmOfFA2HAHDcMMbE\nbNbilBOiTVs0YRqDCsBgB+ZyDscV7hWv01fJe9HI9ml9CXVl+27RuUHFTykZjx5I\nJ8s5lBUc2FIVFzq/UovDJBMMVLywsuxnt4mdcuo0uDuSL6R+L//5P47nsuV/nHG1\nOK4hKUkCALLfCoK3aQdcBg==\n-----END PRIVATE KEY-----\n",
-  "client_email": "vechilecallback@vechilecallback.iam.gserviceaccount.com",
+  "private_key_id": "71386061f50ec3e38752b194ed92531b544270c3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDmNYBLRxvrsd3s\n2XL4l4iilCpfjUa1LFymsgEvsT/mrfMezFRX5UC3uVBPFkrQ6t4uQ3zweaxQf9Nm\nVC/ReTKmqvaAhCGH6kio/tg44TumHnYJfeKc4azfjbOhO1KMsLkmmo/cUCMotx8K\n3KBPTpGr1VBzAgI8cHQAmwRcCuS77cN2jR9ScWmoM/ig2lGeHq9nc3j/aaEAhnj4\nQgpu763Ga0MSgwonyA18L2x4jqOknFopZXH1N6/OSmuY+n81+W7Y+k3834TOhHcM\nZY7FH1AgvTcoNkjFG/y39Wgv/eZmcV7VxZYDV37o8dOIAO0OVDTMsIhjkec4wfeh\noEw2si4PAgMBAAECggEAJG4E/mSjW3oLN4b1tbctLSUrS3Gs5dC+XLbAj06KYTPX\nzGDjXAFwa2KM/eb2Mfdo74NIizmF9js0NfZOluSKCmv1lELUl5CQrQWfK+kgqloZ\nrcjZCqB/3eSrr3EW0CLLOfutllysI65O4EYnrEUvsjSQhZKkzfGxucLOPs6OgdqC\nf8UZRKuO3nmcUmib3nD2eYp6/DETrfDZiJ4slrXkLFcYN6xGkweuDHKKnQ/+kic6\ndKnMCnRD4QzmxWxARchFkp0rNAo2LwYYs99Ikqvp/iZNlZIgmoe5G6GALI31gBUB\nrS6OuSauj2Un2T038B7bT3bQ+dWhq0qNOJmroBjBUQKBgQD4v4dWyOR/qUHoqIE2\nqDQaGGzEy5s+Hy3T0hNPK3qFsB4k7BtB/uSMUg2dpOP0wpCUHoy1Rvfv8/fekRVW\nAcNn2mfiDIw6GpA8AMehc1JJ+/mEy/EAFExxkxdRTxhe1GD3sifIAofWk+jXYEOj\nslKquAh9ClRnMUBDHMMof35sdwKBgQDs65wiS3lTftKYU0MBjy9OYOYO8xt6bbZb\n/48X9KEMSXcK4JxnC2KAvebim9DnQhKSSEE1O29oCxRG628HofGRuPgGwMX4Go80\ndJlmGbsi390N0Y1ufZuK9mWV+eX/SboQPvxGBmeL8YPuWNWrkcxI7l46SCsfZHyV\nNzXAEjppKQKBgQCM4AvJ/qRKGJWXKjdjuQco8ERJf/Y/zHCr0gHViI4vQHsR9hXJ\n3o2ZWq8TZNslNzuiZ1rRH4wzfTwX9Jrcxsrf+jVzNCAGmByvntFwgltMQ0QhDU9D\n+DsC54cBKYZnzmfMYD1fbO95evMXZxFnmApxXSCRkFQUzTPTzmpIeUwkKQKBgGxU\nNun/dJRW8tgvif3WiJzf9ZF0W2YZcD6UlcswUcsadFIG7by4Gewf6MhI0rZLIc69\nNwOuD3yVREpBMF1fEOO+nboIvvx4uG4VumZS8Zw6nArLfE2/JTXfAAgZYa7e+TKg\neh1SpFn6roZ3HAv8+FmIlJE1mnIaMlTQD8WpEAgxAoGABGZywyBIdL5UsODujZJn\nBGS8anr9vzCLolVPrk5uzQ/phhmfyA8EKDnu0JXL3Wy6Y5+a8vbLOVG1Ul0owO0b\n+NIG5LL+754VjAGZ03OkUgcg7t6HlsouAl9vFBb5gUqfbZJUNXWN7HwzBFe44Dt3\nstlQCYvn6vsB4sY1mxttDfA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@vechilecallback.iam.gserviceaccount.com",
   "token_uri": "https://oauth2.googleapis.com/token"
 };
-
 
 const FCM_SCOPE = "https://www.googleapis.com/auth/firebase.messaging";
 
@@ -124,6 +123,10 @@ async function getAccessToken(serviceAccount) {
 
 /**
  * Sends a Firebase Cloud Messaging notification directly from the browser.
+ * Sent as a DATA-ONLY message (no "notification" field) so the mobile app's
+ * Notifee layer builds the visible notification itself and can attach a
+ * direct "Call back" action button - this only works reliably if every
+ * message is data-only, in every app state (foreground/background/killed).
  * @param {string} deviceToken FCM registration token of the recipient device
  * @param {string} title Notification title
  * @param {string} body Notification body/message
@@ -134,7 +137,7 @@ async function sendFcmNotification(deviceToken, title, body, data) {
     throw new Error("Firebase service account is not configured yet. Edit SERVICE_ACCOUNT in web/firebase-fcm.js.");
   }
   const accessToken = await getAccessToken(SERVICE_ACCOUNT);
-  const stringData = {};
+  const stringData = { title: String(title || ""), body: String(body || "") };
   Object.keys(data || {}).forEach(k => { stringData[k] = String(data[k]); });
 
   const res = await fetch(
@@ -148,10 +151,12 @@ async function sendFcmNotification(deviceToken, title, body, data) {
       body: JSON.stringify({
         message: {
           token: deviceToken,
-          notification: { title, body },
           data: stringData,
           android: { priority: "high" },
-          apns: { headers: { "apns-priority": "10" } }
+          apns: {
+            headers: { "apns-priority": "10" },
+            payload: { aps: { "content-available": 1 } }
+          }
         }
       })
     }
