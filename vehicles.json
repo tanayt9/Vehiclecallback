@@ -1,17 +1,4 @@
 {
-  "version": 3,
-  "updatedAt": "2026-09-11T12:33:53.434Z",
-  "vehicles": [
-   {
-      "vehicleNo": "WB74H4582",
-      "ownerName": "TANAY PAUL",
-      "mobile": "9476273393",
-      "fcmToken": "",
-      "active": true
-    }
-  ]
-}
-{
   "version": 4,
   "updatedAt": "2026-09-11T17:00:00.000Z",
   "vehicles": [
