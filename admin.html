@@ -1,21 +1,1122 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin JSON Generator</title>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1">
+
+<meta
+  name="theme-color"
+  content="#0f172a">
+
+<title>Vehicle Callback Center</title>
+
 <style>
-body{margin:0;background:#f4f7fb;color:#0f172a;font-family:Inter,system-ui,sans-serif}.wrap{max-width:900px;margin:auto;padding:30px 18px}.card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:23px;margin-top:18px;box-shadow:0 18px 45px rgba(15,23,42,.07)}h1{margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.label{display:block;font-size:13px;font-weight:800;margin:14px 0 7px}input{width:100%;box-sizing:border-box;border:1px solid #cfd7e3;border-radius:10px;padding:12px;font:inherit}button{border:0;border-radius:10px;padding:12px 15px;background:#3157d5;color:white;font-weight:800;cursor:pointer;margin-top:16px}.secondary{background:#e9eefc;color:#2445b7}.danger{background:#fff0f0;color:#b42318}.list{display:grid;gap:9px;margin-top:15px}.item{border:1px solid #e2e8f0;padding:13px;border-radius:12px;display:flex;justify-content:space-between;gap:10px}.muted{color:#64748b;font-size:13px}.msg{display:none;margin-top:12px;padding:11px;border-radius:10px}.show{display:block;background:#ecfdf3;color:#067647}@media(max-width:650px){.grid{grid-template-columns:1fr}}
-</style></head>
-<body><main class="wrap"><a href="index.html">← Callback Center</a><div class="card"><h1>Admin JSON Generator</h1><p class="muted">This page runs entirely in the browser. It does not upload or save your registry to a server.</p>
-<div class="grid"><div><label class="label">Vehicle number</label><input id="v" placeholder="WB12AB1234"></div><div><label class="label">Owner name</label><input id="n" placeholder="Owner name"></div><div><label class="label">Mobile</label><input id="m" placeholder="9876543210"></div><div><label class="label">FCM Device Token</label><input id="t" placeholder="Firebase device token from the mobile app"></div></div>
-<button id="add">Add vehicle</button><button id="download" class="secondary" style="margin-left:7px">Download vehicles.json</button><button id="clear" class="danger" style="margin-left:7px">Clear</button>
-<div id="msg" class="msg"></div><div id="list" class="list"></div></div></main>
+
+:root{
+  --bg:#f4f7fb;
+  --card:#fff;
+  --ink:#0f172a;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --blue:#3157d5;
+  --blue2:#2445b7;
+  --green:#067647;
+  --red:#b42318;
+  --amber:#92400e;
+  --shadow:0 20px 50px rgba(15,23,42,.08)
+}
+
+*{
+  box-sizing:border-box
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    sans-serif
+}
+
+header{
+  background:#0f172a;
+  color:white
+}
+
+.nav{
+  max-width:1120px;
+  margin:auto;
+  padding:18px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.brand{
+  font-weight:850
+}
+
+.brand small{
+  font-weight:600;
+  opacity:.55;
+  margin-left:6px
+}
+
+.nav a{
+  color:#cbd5e1;
+  text-decoration:none;
+  font-size:13px
+}
+
+.shell{
+  max-width:1120px;
+  margin:auto;
+  padding:40px 22px 70px
+}
+
+.hero{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:28px;
+  margin-bottom:28px
+}
+
+.hero h1{
+  font-size:46px;
+  line-height:1.06;
+  margin:9px 0 14px;
+  letter-spacing:-.04em
+}
+
+.eyebrow{
+  font-size:12px;
+  color:var(--blue);
+  font-weight:850;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+
+.lead{
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.6;
+  max-width:620px
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:var(--shadow)
+}
+
+.panel{
+  padding:25px
+}
+
+.form{
+  max-width:680px
+}
+
+.label{
+  font-size:13px;
+  font-weight:800;
+  margin:18px 0 7px;
+  display:block
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  border:1px solid #cfd7e3;
+  border-radius:12px;
+  padding:13px 14px;
+  font:inherit;
+  background:#fff;
+  color:var(--ink);
+  outline:0
+}
+
+input:focus,
+textarea:focus{
+  border-color:var(--blue);
+  box-shadow:
+    0 0 0 3px
+    rgba(49,87,213,.10)
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:14px 17px;
+  font-weight:850;
+  font-size:15px;
+  cursor:pointer
+}
+
+.btn:disabled{
+  opacity:.6;
+  cursor:not-allowed
+}
+
+.primary{
+  background:var(--blue);
+  color:#fff
+}
+
+.primary:hover{
+  background:var(--blue2)
+}
+
+.secondary{
+  background:#eef2ff;
+  color:#2445b7
+}
+
+.danger{
+  background:#fff1f0;
+  color:var(--red)
+}
+
+.status{
+  display:none;
+  margin-top:16px;
+  padding:13px 14px;
+  border-radius:12px;
+  font-size:14px;
+  line-height:1.45
+}
+
+.ok{
+  display:block;
+  background:#ecfdf3;
+  color:var(--green)
+}
+
+.err{
+  display:block;
+  background:#fff1f0;
+  color:var(--red)
+}
+
+.verify{
+  margin-top:18px;
+  padding:14px;
+  border:1px dashed #cbd5e1;
+  border-radius:14px;
+  display:none
+}
+
+.verify strong{
+  display:block
+}
+
+.pill{
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:99px;
+  background:#eef2ff;
+  color:#3157d5;
+  font-size:11px;
+  font-weight:850;
+  margin-top:7px
+}
+
+.device-count{
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:99px;
+  background:#ecfdf3;
+  color:#067647;
+  font-size:11px;
+  font-weight:850;
+  margin-left:5px
+}
+
+.history{
+  margin-top:28px
+}
+
+.history-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px
+}
+
+.history-list{
+  display:grid;
+  gap:10px;
+  margin-top:14px
+}
+
+.history-item{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:15px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px
+}
+
+.history-item .msg{
+  font-weight:750
+}
+
+.history-item small{
+  display:block;
+  color:var(--muted);
+  margin-top:5px
+}
+
+.badge{
+  font-size:11px;
+  font-weight:850;
+  padding:5px 8px;
+  border-radius:99px;
+  background:#ecfdf3;
+  color:var(--green);
+  height:max-content
+}
+
+.empty{
+  color:var(--muted);
+  padding:22px;
+  text-align:center
+}
+
+.notice{
+  margin-top:25px;
+  color:#64748b;
+  font-size:12px;
+  line-height:1.55
+}
+
+.footer{
+  margin-top:35px;
+  color:#94a3b8;
+  font-size:12px;
+  text-align:center
+}
+
+.warn{
+  margin:0 0 26px;
+  padding:14px 16px;
+  border-radius:14px;
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  color:var(--amber);
+  font-size:13px;
+  line-height:1.55
+}
+
+@media(max-width:800px){
+
+  .hero{
+    grid-template-columns:1fr
+  }
+
+  .hero h1{
+    font-size:37px
+  }
+
+  .shell{
+    padding-top:26px
+  }
+
+  .history-head{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="nav">
+
+<div class="brand">
+Vehicle Callback
+<small>Center</small>
+</div>
+
+<a href="admin.html">
+Admin
+</a>
+
+</div>
+
+</header>
+
+<main class="shell">
+
+<div class="warn">
+
+<strong>⚠ Static-site security note:</strong>
+
+This page sends Firebase notifications directly
+from the browser. For production use, FCM sending
+should be moved to a protected backend.
+
+</div>
+
+<section class="hero">
+
+<div>
+
+<div class="eyebrow">
+Fast owner contact
+</div>
+
+<h1>
+Request a callback from a vehicle owner.
+</h1>
+
+<p class="lead">
+
+Look up the vehicle by its number, then send
+the owner a callback notification. If the owner
+has registered multiple devices, the notification
+is sent to all registered device tokens.
+
+</p>
+
+</div>
+
+<div class="card panel">
+
+<b>How it works</b>
+
+<p
+  class="lead"
+  style="font-size:14px;margin-bottom:0">
+
+Vehicle number lookup →
+Your callback number + message →
+Firebase notification →
+All registered owner devices
+
+</p>
+
+</div>
+
+</section>
+
+<section class="card panel form">
+
+<h2 style="margin:0 0 4px">
+Send callback request
+</h2>
+
+<p style="margin:0;color:var(--muted)">
+Verification is based on the vehicle number only.
+</p>
+
+<form id="form">
+
+<label class="label">
+Vehicle number
+</label>
+
+<input
+  id="vehicle"
+  placeholder="WB12AB1234"
+  required
+  autocomplete="off">
+
+<label class="label">
+Your callback number
+</label>
+
+<input
+  id="callbackNumber"
+  inputmode="numeric"
+  placeholder="The number the owner should call back on"
+  required
+  autocomplete="tel">
+
+<button
+  type="button"
+  class="btn secondary"
+  id="verifyBtn"
+  style="margin-top:14px">
+
+Verify vehicle
+
+</button>
+
+<div
+  class="verify"
+  id="verify">
+</div>
+
+<label class="label">
+Message
+</label>
+
+<textarea
+  id="message"
+  maxlength="500"
+  required
+  placeholder="Please call back regarding your vehicle.">
+</textarea>
+
+<button
+  class="btn primary"
+  id="sendBtn"
+  style="width:100%;margin-top:15px">
+
+Send notification
+
+</button>
+
+</form>
+
+<div
+  id="status"
+  class="status">
+</div>
+
+<div class="notice">
+
+This is a static site.
+The notification request is sent directly
+from the browser to Firebase Cloud Messaging.
+Browser local history is stored only on this device.
+
+</div>
+
+</section>
+
+<section class="history card panel">
+
+<div class="history-head">
+
+<div>
+
+<h2 style="margin:0">
+Notification history
+</h2>
+
+<p
+  style="margin:5px 0 0;color:var(--muted);font-size:13px">
+
+Saved locally in this browser.
+
+</p>
+
+</div>
+
+<button
+  class="btn danger"
+  id="clearHistory">
+
+Clear history
+
+</button>
+
+</div>
+
+<div
+  id="historyList"
+  class="history-list">
+</div>
+
+</section>
+
+<div class="footer">
+
+Vehicle Callback Center ·
+Multi-device FCM version ·
+Powered by Firebase Cloud Messaging
+
+</div>
+
+</main>
+
+<script src="firebase-fcm.js"></script>
+
 <script>
-const KEY="vehicleRegistryDraftV3";let rows=JSON.parse(localStorage.getItem(KEY)||"[]");
-function render(){document.getElementById("list").innerHTML=rows.length?rows.map((x,i)=>`<div class="item"><div><b>${esc(x.vehicleNo)}</b><div class="muted">${esc(x.ownerName)} · ${esc(x.mobile)}</div></div><button class="danger" style="margin:0" onclick="removeRow(${i})">Remove</button></div>`).join(""):"<div class='muted'>No vehicles added yet.</div>";localStorage.setItem(KEY,JSON.stringify(rows))}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-window.removeRow=i=>{rows.splice(i,1);render()}
-document.getElementById("add").onclick=()=>{const v=document.getElementById("v").value.trim().toUpperCase(),n=document.getElementById("n").value.trim(),m=document.getElementById("m").value.trim(),t=document.getElementById("t").value.trim();if(!v||!n||!m){alert("Vehicle, owner and mobile are required.");return}rows.push({vehicleNo:v,ownerName:n,mobile:m,fcmToken:t||"REPLACE_WITH_REAL_FCM_TOKEN",active:true});["v","n","m","t"].forEach(id=>document.getElementById(id).value="");render()}
-document.getElementById("download").onclick=()=>{const out={version:3,updatedAt:new Date().toISOString(),vehicles:rows};const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:"application/json"}));a.download="vehicles.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-document.getElementById("clear").onclick=()=>{if(confirm("Clear the local draft?")){rows=[];render()}};render()
-</script></body></html>
+
+let verifiedOwner = null;
+
+const normV = s =>
+  String(s || "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g,"");
+
+const normM = s =>
+  String(s || "")
+    .replace(/\D/g,"");
+
+/*
+  Show status message.
+*/
+function status(text, ok){
+
+  const e =
+    document.getElementById("status");
+
+  e.textContent = text;
+
+  e.className =
+    "status " + (ok ? "ok" : "err");
+
+}
+
+/*
+  Load vehicle registry.
+*/
+async function registry(){
+
+  const r =
+    await fetch(
+      "./vehicles.json",
+      {
+        cache:"no-store"
+      }
+    );
+
+  if(!r.ok){
+
+    throw new Error(
+      "Vehicle registry could not be loaded."
+    );
+
+  }
+
+  return r.json();
+
+}
+
+/*
+  Convert old fcmToken into fcmTokens[].
+*/
+function getFcmTokens(owner){
+
+  let tokens = [];
+
+  /*
+    New format.
+  */
+  if(Array.isArray(owner.fcmTokens)){
+
+    tokens.push(
+      ...owner.fcmTokens
+    );
+
+  }
+
+  /*
+    Backward compatibility with
+    the old single-token format.
+  */
+  if(owner.fcmToken){
+
+    tokens.push(
+      owner.fcmToken
+    );
+
+  }
+
+  /*
+    Remove empty/duplicate tokens.
+  */
+  return [
+    ...new Set(
+      tokens
+        .map(t => String(t || "").trim())
+        .filter(Boolean)
+        .filter(
+          t =>
+            !t.includes(
+              "REPLACE_WITH_REAL_FCM_TOKEN"
+            )
+        )
+    )
+  ];
+
+}
+
+/*
+  Local notification history.
+*/
+function getHistory(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        "vehicleCallbackHistory"
+      ) || "[]"
+    );
+
+  }catch{
+
+    return [];
+
+  }
+
+}
+
+function saveHistory(x){
+
+  const a =
+    getHistory();
+
+  a.unshift(x);
+
+  localStorage.setItem(
+    "vehicleCallbackHistory",
+    JSON.stringify(
+      a.slice(0,100)
+    )
+  );
+
+  renderHistory();
+
+}
+
+function escapeHtml(s){
+
+  return String(s).replace(
+    /[&<>"']/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c])
+  );
+
+}
+
+function renderHistory(){
+
+  const box =
+    document.getElementById(
+      "historyList"
+    );
+
+  const a =
+    getHistory();
+
+  if(!a.length){
+
+    box.innerHTML =
+      '<div class="empty">' +
+      'No callback requests have been sent ' +
+      'from this browser.' +
+      '</div>';
+
+    return;
+
+  }
+
+  box.innerHTML =
+    a.map(x => `
+
+      <div class="history-item">
+
+        <div>
+
+          <div class="msg">
+            ${escapeHtml(x.message)}
+          </div>
+
+          <small>
+            ${escapeHtml(x.vehicleNo)}
+            · call back on
+            ${escapeHtml(x.callbackNumber)}
+            ·
+            ${new Date(x.time).toLocaleString()}
+          </small>
+
+        </div>
+
+        <span class="badge">
+          ${escapeHtml(x.status)}
+        </span>
+
+      </div>
+
+    `).join("");
+
+}
+
+/*
+  Verify vehicle.
+*/
+document.getElementById(
+  "verifyBtn"
+).onclick = async () => {
+
+  const v =
+    normV(
+      document.getElementById(
+        "vehicle"
+      ).value
+    );
+
+  const box =
+    document.getElementById(
+      "verify"
+    );
+
+  if(!v){
+
+    status(
+      "Enter a vehicle number.",
+      false
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const d =
+      await registry();
+
+    const o =
+      (d.vehicles || []).find(
+        x =>
+          x.active !== false &&
+          normV(x.vehicleNo) === v
+      );
+
+    if(!o){
+
+      verifiedOwner = null;
+
+      box.style.display =
+        "block";
+
+      box.innerHTML =
+        "<strong>" +
+        "Vehicle not verified" +
+        "</strong>" +
+        "<span style='color:#b42318'>" +
+        "No active vehicle found with that number." +
+        "</span>";
+
+      return;
+
+    }
+
+    verifiedOwner = o;
+
+    const tokens =
+      getFcmTokens(o);
+
+    box.style.display =
+      "block";
+
+    box.innerHTML = `
+
+      <strong>
+        ✓ Vehicle verified
+      </strong>
+
+      <div>
+        ${escapeHtml(
+          o.ownerName ||
+          "Registered owner"
+        )}
+
+        <span class="device-count">
+          ${tokens.length}
+          device${tokens.length === 1 ? "" : "s"}
+        </span>
+      </div>
+
+      <span class="pill">
+        ${escapeHtml(v)}
+      </span>
+
+    `;
+
+    if(!tokens.length){
+
+      status(
+        "Vehicle verified, but no registered FCM devices were found.",
+        false
+      );
+
+    }else{
+
+      status(
+        `Vehicle verified. ${tokens.length} registered device${tokens.length === 1 ? "" : "s"} will receive the request.`,
+        true
+      );
+
+    }
+
+  }catch(e){
+
+    status(
+      e.message ||
+      "Vehicle lookup failed.",
+      false
+    );
+
+  }
+
+};
+
+/*
+  Send callback request.
+*/
+document.getElementById(
+  "form"
+).onsubmit = async e => {
+
+  e.preventDefault();
+
+  if(!verifiedOwner){
+
+    status(
+      "Please verify the vehicle first.",
+      false
+    );
+
+    return;
+
+  }
+
+  const cb =
+    normM(
+      document.getElementById(
+        "callbackNumber"
+      ).value
+    );
+
+  if(!cb){
+
+    status(
+      "Enter the callback number.",
+      false
+    );
+
+    return;
+
+  }
+
+  const msg =
+    document.getElementById(
+      "message"
+    ).value.trim();
+
+  if(!msg){
+
+    status(
+      "Enter a message.",
+      false
+    );
+
+    return;
+
+  }
+
+  /*
+    Get all registered device tokens.
+  */
+  const tokens =
+    getFcmTokens(
+      verifiedOwner
+    );
+
+  if(!tokens.length){
+
+    status(
+      "This vehicle has no registered FCM device tokens.",
+      false
+    );
+
+    return;
+
+  }
+
+  const btn =
+    document.getElementById(
+      "sendBtn"
+    );
+
+  btn.disabled = true;
+
+  status(
+    `Sending notification to ${tokens.length} device${tokens.length === 1 ? "" : "s"}...`,
+    true
+  );
+
+  const fullBody =
+    `${msg}\nCall back on: ${cb}`;
+
+  let successCount = 0;
+  let failedCount = 0;
+
+  /*
+    Send independently to every device.
+
+    Promise.allSettled means one failed/expired
+    token does not stop the other devices.
+  */
+  const results =
+    await Promise.allSettled(
+
+      tokens.map(token =>
+        sendFcmNotification(
+          token,
+          "Vehicle Callback Request",
+          fullBody,
+          {
+            type:"CALLBACK_REQUEST",
+            vehicleNo:
+              verifiedOwner.vehicleNo,
+            callbackNumber:cb
+          }
+        )
+      )
+
+    );
+
+  results.forEach(result => {
+
+    if(result.status === "fulfilled"){
+
+      successCount++;
+
+    }else{
+
+      failedCount++;
+
+      console.error(
+        "FCM notification failed:",
+        result.reason
+      );
+
+    }
+
+  });
+
+  const overallStatus =
+    successCount > 0
+      ? "Sent"
+      : "Failed";
+
+  saveHistory({
+
+    vehicleNo:
+      verifiedOwner.vehicleNo,
+
+    callbackNumber:
+      cb,
+
+    message:
+      msg,
+
+    time:
+      new Date().toISOString(),
+
+    status:
+      overallStatus,
+
+    deviceCount:
+      tokens.length,
+
+    successCount:
+      successCount,
+
+    failedCount:
+      failedCount
+
+  });
+
+  if(successCount > 0){
+
+    if(failedCount > 0){
+
+      status(
+        `Notification sent to ${successCount} device${successCount === 1 ? "" : "s"}. ${failedCount} device${failedCount === 1 ? "" : "s"} failed.`,
+        true
+      );
+
+    }else{
+
+      status(
+        `Notification sent successfully to all ${successCount} registered devices.`,
+        true
+      );
+
+    }
+
+    document.getElementById(
+      "message"
+    ).value = "";
+
+  }else{
+
+    status(
+      "Notification failed on all registered devices.",
+      false
+    );
+
+  }
+
+  btn.disabled = false;
+
+};
+
+/*
+  Clear local history.
+*/
+document.getElementById(
+  "clearHistory"
+).onclick = () => {
+
+  if(
+    confirm(
+      "Clear local notification history?"
+    )
+  ){
+
+    localStorage.removeItem(
+      "vehicleCallbackHistory"
+    );
+
+    renderHistory();
+
+  }
+
+};
+
+renderHistory();
+
+</script>
+
+</body>
+</html>
